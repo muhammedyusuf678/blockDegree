@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlockDegree</title>
+    <link rel="stylesheet" href="/css/bootstrap-4.4.1.min.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">BlockDegree</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Dashboard <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Help</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item ">
+                    <a class="nav-link" href="#">Log Out</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h3 class="text-center">Share your <%=degree.degreeType %> in <%=degree.major%> Degree with</h3>
+        <form class="mt-2" action="/addDegree" method="POST">
+            <div class="form-group">
+                <label for="blockDegreeEmail">BlockDegree Email</label>
+                <input type="email" class="form-control" name="blockDegreeEmail" id="blockDegreeEmail">
+            </div>
+            <div class="form-group text-center">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+
+        <hr style="border-top:10px solid rgba(0,0,0,.1)">
+
+        <h4>Who has access</h4>
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">blockDegreeEmail</th>
+                    <th></th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <% var i=1; %>
+                <tr>
+                    <th scope="row"><%= i %> </th>
+                    <td>mufasa@gmail.com</td>
+                    <td><a href="/degrees/askdjlkasdlk">Revoke</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="/js/jquery-3.4.1.min.js"></script>
+    <script src="/js/popper-1.16.0.min.js"></script>
+    <script src="/js/bootstrap-4.4.1.min.js"></script>
+
+    <script src="/js/universityDashboardFunctions.js"></script>
+</body>
+
+</html>

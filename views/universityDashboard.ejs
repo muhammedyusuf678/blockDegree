@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlockDegree</title>
+    <link rel="stylesheet" href="/css/bootstrap-4.4.1.min.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">BlockDegree</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Dashboard <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Help</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item ">
+                    <a class="nav-link" href="#">Log Out</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h3 class="text-center"><%=university.universityName%>'s Dashboard</h3>
+        <h4>Add a Degree</h4>
+        <form class="mt-2" action="/addDegree" method="POST">
+            <input type="hidden" name="university" value="<%=university._id%>">
+            <div class="form-group">
+                <label for="student">Student BlockDegree Email</label>
+                <input type="email" class="form-control" name="student" id="student">
+            </div>
+            <div class="form-group">
+                <label for="studentUniversityEmail">Student University Email</label>
+                <input type="email" class="form-control" name="studentUniversityEmail" id="studentUniversityEmail">
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="college">College</label>
+                    <input type="text" class="form-control" name="college" id="college">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="major">Major</label>
+                    <input type="text" class="form-control" name="major" id="major">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="degreeType">Degree Type</label>
+                    <input type="text" class="form-control" name="degreeType" id="degreeType">
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="cgpa">CGPA</label>
+                    <input type="text" class="form-control" name="cgpa" id="cgpa">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="honors">Honors if any</label>
+                    <input type="text" class="form-control" name="honors" id="honors">
+                </div>
+
+            </div>
+            <div class="form-group">
+                <label for="issueDate">Date Issued</label>
+                <input type="date" class="form-control" name="issueDate" id="issueDate">
+            </div>
+            <div class="form-group text-center">
+                <button type="submit" class="btn btn-primary">Submit Add Degree Transaction</button>
+            </div>
+        </form>
+
+        <hr style="border-top:10px solid rgba(0,0,0,.1)">
+
+        <h4>All Degrees</h4>
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Student</th>
+                    <th scope="col">DegreeType</th>
+                    <th scope="col">Major</th>
+                    <th scope="col">CGPA</th>
+                    <th scope="col">IssueDate</th>
+                    <th></th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <% var i=1; %>
+                <% university.issuedDegrees.forEach(function(degree){ %>
+                <tr>
+                    <th scope="row"><%= i %> </th>
+                    <td><%= degree.studentName %></td>
+                    <td><%= degree.degreeType %></td>
+                    <td><%= degree.major %></td>
+                    <td><%= degree.cgpa %></td>
+                    <td><%= degree.issueDate.toLocaleDateString("en-US") %></td>
+                    <td><a href="/degrees/<%=degree._id%>">View Degree</a></td>
+                </tr>
+                <% i++; }) %>
+            </tbody>
+        </table>
+
+        <a href="#" id="invokeChaincode" class="d-block">Invoke Chaincode - create</a>
+
+        <input type="text" name="queryBlockchainKey" id="queryBlockchainKey">
+        <a href="#" id="queryBlockchain" class="d-block">Query All Data - Blockchain</a>
+
+        <span id="queryResult">
+
+        </span>
+
+    </div>
+
+    <script src="/js/jquery-3.4.1.min.js"></script>
+    <script src="/js/popper-1.16.0.min.js"></script>
+    <script src="/js/bootstrap-4.4.1.min.js"></script>
+
+    <script src="/js/universityDashboardFunctions.js"></script>
+</body>
+
+</html>
