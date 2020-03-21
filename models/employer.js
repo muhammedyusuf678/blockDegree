@@ -1,3 +1,5 @@
+var mongoose = require("mongoose");
+
 const employerSchema = new mongoose.Schema({
     employerID:{
         type: Number,
@@ -11,7 +13,7 @@ const employerSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    email:{
+    blockDegreeEmail:{
         type: String,
         required: true,
         unique: true,
@@ -43,13 +45,17 @@ const employerSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    sharesList: {
-        degree: 
+    sharesList: [
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Degree',
             required: true
         }
-    }
+    ]
 
 });
+
+//compile into model which has methods
+var Employer = new mongoose.model("Employer", employerSchema);
+
+module.exports = Employer;

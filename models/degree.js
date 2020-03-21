@@ -52,7 +52,7 @@ var degreeSchema = new mongoose.Schema({
         type: Date,
         required: true
     }
-});
+}, { versionKey: false });
 //compile into model which has methods
 var Degree = new mongoose.model("Degree", degreeSchema);
 
