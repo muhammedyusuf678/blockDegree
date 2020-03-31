@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BlockDegree</title>
     <link rel="stylesheet" href="/css/bootstrap-4.4.1.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+
 </head>
 
 <body>
@@ -35,11 +37,18 @@
         </div>
     </nav>
 
-    <div class="container mt-5">
-        <h3 class="text-center"><%=employer.employerName%>'s Dashboard</h3>
-        <h4>All degrees shared with <%= employer.companyName %></h4>
-        <table class="table">
-            <thead class="thead-dark">
+    <div class="p-4 text-center lightGreen">
+        <div class="d-inline-block">
+            <img src="/images/employer-logo.png" alt="employer logo"
+            style="width: 150px; height:150px; float:center;" class="ml-3 mr-3">
+        </div>
+        <h1 class="display-5 d-inline-block vertical-middle"><%=employer.employerName%>'s Dashboard</h1>
+    </div>
+
+    <div class="container mt-3">
+        <h1 class="display-5 text-center">All degrees shared with <%= employer.companyName %></h1>
+        <table class="table table-hover mt-3">
+            <thead class="bg-info text-white">
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">University</th>
@@ -54,7 +63,7 @@
             <tbody>
                 <% var i=1; %>
                 <% employer.sharesList.forEach(function(degree){ %>
-                <tr>
+                <tr class="accessRow">
                     <th scope="row"><%= i %> </th>
                     <td><%= degree.universityName %></td>
                     <td><%= degree.studentName %></td>
@@ -62,7 +71,7 @@
                     <td><%= degree.major %></td>
                     <td><%= degree.cgpa %></td>
                     <td><%= degree.issueDate.toLocaleDateString("en-US") %></td>
-                    <td><a href="/degrees/<%=degree._id%>">View Degree</a></td>
+                    <td><a href="/degrees/<%=degree._id%>" class="btn btn-outline-info">View Degree</a></td>
                 </tr>
                 <% i++; }) %>
             </tbody>

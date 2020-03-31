@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BlockDegree</title>
     <link rel="stylesheet" href="/css/bootstrap-4.4.1.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/font-awesome/css/all.css">
+
 </head>
 
 <body>
@@ -35,95 +38,46 @@
         </div>
     </nav>
 
-    <div class="container mt-5">
-        <h3 class="text-center"><%=university.universityName%>'s Dashboard</h3>
-        <h4>Add a Degree</h4>
-        <form class="mt-2" action="/addDegree" method="POST">
-            <input type="hidden" name="university" value="<%=university._id%>">
-            <div class="form-group">
-                <label for="student">Student BlockDegree Email</label>
-                <input type="email" class="form-control" name="student" id="student">
-            </div>
-            <div class="form-group">
-                <label for="studentUniversityEmail">Student University Email</label>
-                <input type="email" class="form-control" name="studentUniversityEmail" id="studentUniversityEmail">
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="college">College</label>
-                    <input type="text" class="form-control" name="college" id="college">
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="major">Major</label>
-                    <input type="text" class="form-control" name="major" id="major">
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="degreeType">Degree Type</label>
-                    <input type="text" class="form-control" name="degreeType" id="degreeType">
-                </div>
-                <div class="form-group col-md-2">
-                    <label for="cgpa">CGPA</label>
-                    <input type="text" class="form-control" name="cgpa" id="cgpa">
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="honors">Honors if any</label>
-                    <input type="text" class="form-control" name="honors" id="honors">
-                </div>
-
-            </div>
-            <div class="form-group">
-                <label for="issueDate">Date Issued</label>
-                <input type="date" class="form-control" name="issueDate" id="issueDate">
-            </div>
-            <div class="form-group text-center">
-                <button type="submit" class="btn btn-primary">Submit Add Degree Transaction</button>
-            </div>
-        </form>
-
-        <hr style="border-top:10px solid rgba(0,0,0,.1)">
-
-        <h4>All Degrees</h4>
-        <table class="table">
-            <thead class="thead-dark">
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Student</th>
-                    <th scope="col">DegreeType</th>
-                    <th scope="col">Major</th>
-                    <th scope="col">CGPA</th>
-                    <th scope="col">IssueDate</th>
-                    <th></th>
-
-                </tr>
-            </thead>
-            <tbody>
-                <% var i=1; %>
-                <% university.issuedDegrees.forEach(function(degree){ %>
-                <tr>
-                    <th scope="row"><%= i %> </th>
-                    <td><%= degree.studentName %></td>
-                    <td><%= degree.degreeType %></td>
-                    <td><%= degree.major %></td>
-                    <td><%= degree.cgpa %></td>
-                    <td><%= degree.issueDate.toLocaleDateString("en-US") %></td>
-                    <td><a href="/degrees/<%=degree._id%>">View Degree</a></td>
-                </tr>
-                <% i++; }) %>
-            </tbody>
-        </table>
-
-        <!-- <a href="#" id="invokeChaincode" class="d-block">Invoke Chaincode - create</a>
-
-        <input type="text" name="queryBlockchainKey" id="queryBlockchainKey">
-        <a href="#" id="queryBlockchain" class="d-block">Query All Data - Blockchain</a>
-
-        <span id="queryResult">
-
-        </span> -->
-
+    <div class="p-4 text-center" style="background-color: gainsboro;">
+        <div class="d-inline-block">
+            <!-- <img src="/images/aus-logo.png" alt="university logo" style="width: 150px; height:150px; float:center;"
+                class="ml-3 mr-3"> -->
+            <i class="fas fa-university fa-7x mr-3"></i>
+        </div>
+        <h1 class="display-5 d-inline-block"><%=university.universityName%>'s<br>Dashboard</h1>
     </div>
+
+    <div class="container mt-5 text-center">
+        <div class="row">
+            <!-- <div class="col">
+                <a href="" class="btn btn-outline-info w-100 p-4 rem1-25"><i class="fas fa-user-plus mr-2"></i>Add a
+                    Student</a>
+            </div> -->
+            <div class="col">
+                <a href="/university/<%=university._id%>/addDegree" class="btn btn-outline-info w-100 p-4 rem1-25"><i
+                        class="fas fa-stamp mr-2"></i></i>Add a Degree</a>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col">
+                <a href="/university/<%=university._id%>/viewIssuedDegrees"
+                    class="btn btn-outline-info w-100 p-4 rem1-25"><i class="fas fa-file-alt mr-2"></i>View All Issued
+                    Degrees</a>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col">
+                <a href="/university/<%=university._id%>/viewAllStudents" class="btn btn-outline-info w-100 p-4 rem1-25"><i class="fas fa-users mr-2"></i>View All
+                    Students</a>
+            </div>
+        </div>
+    </div>
+
+    <footer id="sticky-footer" class="bg-dark text-white-50 pt-4 text-center">
+        <!-- <div class="container text-center"> -->
+        Copyright &copy; BlockDegree
+        <!-- </div> -->
+    </footer>
 
     <script src="/js/jquery-3.4.1.min.js"></script>
     <script src="/js/popper-1.16.0.min.js"></script>

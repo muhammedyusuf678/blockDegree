@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BlockDegree</title>
     <link rel="stylesheet" href="/css/bootstrap-4.4.1.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+
 </head>
 
 <body>
@@ -35,27 +37,55 @@
         </div>
     </nav>
 
-    <div class="container mt-5">
-
-        <div class="card mb-3">
+    <div class="container mt-3">
+        <div class="card">
             <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
-            <div class="card-body text-center">
+            <div class="card-body text-center degreeCard">
                 <p class="card-text">On the authority of the</p>
-                <h5 class="card-title"><%= degree.universityName%></h5>
-                <h3 class="card-title"><%=degree.studentName%></h3>
-                <p class="card-text ">having fulfilled all requirements and conditions prescribed is awarded the</p>
+                <h5 class="card-title diplomaFont rem4"><%= degree.universityName%></h5>
+                <h1 class="display-5"><%=degree.studentName%></h1>
+                <p class="card-text ">having fulfilled all requirements and conditions prescribed</p>
+                <p class="card-text">is awarded the</p>
 
-                <h4 class="card-title"><%=degree.degreeType%> in <%=degree.major%></h4>
+                <h1 class="majorFont"><%=degree.degreeType%> in <%=degree.major%></h1>
                 <p class="card-text ">with distinction</p>
                 <h5 class="card-title"><%=degree.honors%></h5>
-                <p class="card-text">and all honors and priviledges attached to the same</p>
-                <p class="card-text">Signed</p>
-                <p class="card-text">Chancellor: Kevin Mitchell</p>
-                <p class="card-text">Dean: Gerassimos Barlas</p>
-               
-                <p class="card-text"><small class="text-muted">Awarded on <%=degree.issueDate.toLocaleDateString("en-US") %></small></p>
+                <p class="card-text">and all honors, rights and priviledges attached to the same</p>
+                <!-- <div class="text-center"> -->
+
+                <div class="text-center">
+                    <img src="/images/aus-logo.png" alt="university logo"
+                        style="width: 150px; height:150px; float:center;" class="ml-3 mr-3">
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p class="signFont">Kevin Mitchell</p>
+                    </div>
+                    <div class="col">
+                        <p class="signFont">Gerassimos Barlas</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p class="diplomaFont rem2">Chancellor</p>
+                    </div>
+                    <div class="col">
+                        <p class="diplomaFont rem2">Dean</p>
+                    </div>
+                </div>
+                <!-- <div class="text-left mr-5 d-inline-block signFont">
+                </div>
+                <div class="text-right ml-5 d-inline-block signFont">
+                </div> -->
+                <!-- </div> -->
+                <p class="card-text"><small class="text-muted">Awarded on
+                        <%=degree.issueDate.toLocaleDateString("en-US") %></small></p>
             </div>
         </div>
+        <div class="text-center m-0 p-0">
+            <img src="/images/blockchain-verified.png" alt="blockchain verified" class="w-75, h-75">
+        </div>
+    
     </div>
 
     <script src="/js/jquery-3.4.1.min.js"></script>

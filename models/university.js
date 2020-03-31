@@ -31,6 +31,19 @@ const universitySchema = new mongoose.Schema({
             required: true
         }
     ],
+    // registeredStudentsList:[
+    //     {
+    //         studentReference: {
+    //             type: mongoose.Schema.Types.ObjectId,
+    //             ref: 'Student',
+    //             required: true
+    //         },
+    //         studentUniversityEmail:{
+    //             type: String,
+    //             required: true
+    //         }
+    //     }
+    // ],
     issuedDegrees:[
         {
             type: mongoose.Schema.Types.ObjectId,
@@ -79,6 +92,15 @@ const universitySchema = new mongoose.Schema({
         type: Boolean,
         default: false
     }
+    // ,
+    // dean: {
+    //     type:String,
+    //     required: true
+    // },
+    // chancellor: {
+    //     type: String,
+    //     required: true
+    // }
 });
 
 //compile into model which has methods

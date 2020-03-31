@@ -7,8 +7,8 @@ var Employer = require("./models/employer")
 
 
 var dbFunctions = {
-    findUniversityById: async function  (id){
-        return await University.findById(id, function(err,foundUniversity){
+    findUniversityById: async function  (id, populateFlag=false, populateObject=""){
+        function callback (err,foundUniversity){
             if(err) { 
                 console.log (err);
                 return false;
@@ -18,7 +18,9 @@ var dbFunctions = {
                 console.log(foundUniversity);
                 return foundUniversity;
             }
-        })
+        }
+        if(populateFlag) return await University.findById(id).populate(populateObject).exec(callback);
+        else return await University.findById(id, callback)
     },
     findStudentById: async function  (id, populateFlag=false, populateObject="") {
         function callback (err,foundStudent){

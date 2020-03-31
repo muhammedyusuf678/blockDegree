@@ -29,8 +29,11 @@ const studentSchema = new mongoose.Schema({
             studentUniversityEmail:{
                 type: String,
                 required: true
+            },
+            verified: {
+                type: Boolean,
+                default: false
             }
-            
         }
     ],
     degreesList:[

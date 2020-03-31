@@ -1,0 +1,97 @@
+@font-face {
+    font-family: 'diplomaregular';
+    src: url('diploma_regular-webfont.woff2') format('woff2'),
+         url('diploma_regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+.accessRow td, .accessRow th {
+    /* padding: 5px; */
+    vertical-align: middle;
+}
+
+.accessRow td a {
+    /* padding: 5px; */
+   float:right;
+}
+
+.degreeCard {
+    font-size: 1rem;
+}
+
+.diplomaFont {
+    font-family: "diplomaregular";
+}
+
+.rem4{
+    font-size: 4rem;
+}
+
+.degreeCard .majorFont {
+    font-size: 2.5rem;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.degreeCard .signFont {
+    font-size: 1.25rem;
+    font-family: cursive;
+    vertical-align: middle;
+    text-decoration: underline;
+    text-underline-position: under;
+
+}
+
+.form-group {
+    margin: auto;
+    margin-bottom:1rem;
+}
+
+.vertical-middle{
+    vertical-align: middle;
+}
+
+.darkPurple {
+    background-color: #65587f;
+}
+
+a .color-purple {
+    background-color: #65587f;
+    color: white;
+}
+
+a .color-purple:hover {
+    background-color: white;
+    color: #65587f;
+}
+
+.darkBlue {
+    background-color: #30475e;
+}
+
+.grayish {
+    background-color: #6c7b95;
+}
+
+.lightGreen {
+    background-color: #84a9ac;
+}
+
+.rem1-25 {
+    font-size:1.25rem;
+}
+
+.rem2{
+    font-size:2rem;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 100px;
+    vertical-align: middle;
+  }
+
+

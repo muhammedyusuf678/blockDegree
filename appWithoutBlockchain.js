@@ -104,6 +104,38 @@ app.post("/registerEmployer", function (req, res) {
     })
 })
 
+app.get("/university/:universityId/addDegree", function (req, res) {
+    var universityId = req.params.universityId;
+    res.render("addDegree", { universityId: universityId })
+})
+
+app.get("/university/:universityId/viewIssuedDegrees", function (req, res) {
+    //async await
+    console.log("get request recieved in viewIssuedDegrees")
+    var universityId = req.params.universityId;
+    University.findById(universityId).populate("issuedDegrees").exec(function(err,foundUniversity){
+        if(err) console.log(err);
+        else {
+            res.render("viewIssuedDegrees", { university: foundUniversity })
+        }
+    })
+    
+})
+
+app.get("/university/:universityId/viewAllStudents", function (req, res) {
+    //async await
+    console.log("get request recieved in viewAllStudents")
+    var universityId = req.params.universityId;
+    University.findById(universityId).populate("registeredStudentsList").exec(function(err,foundUniversity){
+        if(err) console.log(err);
+        else {
+            res.render("viewAllStudents", { university: foundUniversity })
+        }
+    })
+})
+
+
+
 app.post("/addDegree", async function (req, res) {
     console.log("post request received in /addDegree");
     var studentEmail = req.body.student;

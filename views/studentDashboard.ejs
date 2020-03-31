@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BlockDegree</title>
     <link rel="stylesheet" href="/css/bootstrap-4.4.1.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/font-awesome/css/all.css">
+
 </head>
 
 <body>
@@ -35,15 +38,31 @@
         </div>
     </nav>
 
-    <div class="container mt-5">
-        <h3 class="text-center"><%=student.name%>'s Dashboard</h3>
-        <h4>All Degrees</h4>
-        <table class="table">
-            <thead class="thead-dark">
+    <div class="p-4 text-center darkPurple text-white">
+        <div class="d-inline-block">
+            <!-- <img src="/images/graduate-logo.png" alt="graduate logo"
+            style="width: 150px; height:150px; float:center;" class="ml-3 mr-3"> -->
+            <i class="fas fa-user-graduate fa-7x mr-3"></i>
+        </div>
+        <div class="d-inline-block h-100">
+            <h1 class="display-5 d-inline-block vertical-middle"><%=student.name%>'s Dashboard</h1>
+
+        </div>
+    </div>
+
+    <div class="container mt-4">
+        <!-- <div class="row">
+            <div class="col">
+                <a href="#" class="btn btn-outline-info w-100 p-2"><i
+                        class="fas fa-stamp mr-2"></i></i>Register with a University</a>
+            </div>
+        </div> -->
+        <h1 class="display-5 text-center mt-3">All Degrees</h1>
+        <table class="table table-hover mt-3">
+            <thead class="bg-info text-white">
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">University</th>
-                    <th scope="col">Student</th>
                     <th scope="col">DegreeType</th>
                     <th scope="col">Major</th>
                     <th scope="col">CGPA</th>
@@ -56,16 +75,15 @@
             <tbody>
                 <% var i=1; %>
                 <% student.degreesList.forEach(function(degree){ %>
-                <tr>
+                <tr class="accessRow">
                     <th scope="row"><%= i %> </th>
                     <td><%= degree.universityName %></td>
-                    <td><%= degree.studentName %></td>
                     <td><%= degree.degreeType %></td>
                     <td><%= degree.major %></td>
                     <td><%= degree.cgpa %></td>
                     <td><%= degree.issueDate.toLocaleDateString("en-US") %></td>
-                    <td><a href="/degrees/<%=degree._id%>">View Degree</a></td>
-                    <td><a href="/degrees/<%=degree._id%>/share">Share/Revoke Degree</a></td>
+                    <td><a href="/degrees/<%=degree._id%>" class="btn btn-outline-info"><i class="far fa-eye mr-2"></i>View</a></td>
+                    <td><a href="/degrees/<%=degree._id%>/share" class="btn btn-outline-info"><i class="fas fa-share-alt mr-2"></i>Share</a></td>
 
                 </tr>
                 <% i++; }) %>
