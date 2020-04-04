@@ -6,24 +6,6 @@ const universitySchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
-    userCredentials:[
-        {
-            userEmail: {
-                type: String,
-                required: true,
-                unique: true,
-            },
-            userPassword: {
-                type: String,
-                required: true,
-                minlength: 8
-            },
-            accessLevel:{
-                type:Number,
-                required: true
-            }
-        }
-    ],
     registeredStudentsList:[
         {
             type: mongoose.Schema.Types.ObjectId,
@@ -51,13 +33,6 @@ const universitySchema = new mongoose.Schema({
             required: true
         }
     ],
-    // issuedtranscripts:[
-    //     {
-    //         type: mongoose.Schema.Types.ObjectId,
-    //         ref: 'Transcript',
-    //         required: true
-    //     }
-    // ],
     location: {
         country: {
             type: String,

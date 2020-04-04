@@ -1,43 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
+<%- include ("./partials/header") %>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BlockDegree</title>
-    <link rel="stylesheet" href="/css/bootstrap-4.4.1.min.css">
-    <link rel="stylesheet" href="/css/styles.css">
-
-</head>
-
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">BlockDegree</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Dashboard <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Help</a>
-                </li>
-            </ul>
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item ">
-                    <a class="nav-link" href="#">Log Out</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-
-    <!-- <div class="p-4 text-center" style="background-color: gainsboro;">
+<!-- <div class="p-4 text-center" style="background-color: gainsboro;">
         <div class="d-inline-block">
             <img src="/images/aus-logo.png" alt="university logo"
             style="width: 150px; height:150px; float:center;" class="ml-3 mr-3">
@@ -45,48 +8,42 @@
         <h1 class="display-5 d-inline-block vertical-middle"><%=university.universityName%>'s<br>Dashboard</h1>
     </div> -->
 
-    <div class="container mt-3">   
-        <div class="w-100 text-center">
-            <a href="" class="btn btn-outline-info">Return to Dashboard</a>
-        </div>
-        
-        <h3 class="mt-3 text-center">All Issued Degrees</h3>
-        <table class="table table-hover mt-3">
-            <thead class="bg-info text-white">
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Student</th>
-                    <th scope="col">DegreeType</th>
-                    <th scope="col">Major</th>
-                    <th scope="col">CGPA</th>
-                    <th scope="col">IssueDate</th>
-                    <th></th>
-
-                </tr>
-            </thead>
-            <tbody>
-                <% var i=1; %>
-                <% university.issuedDegrees.forEach(function(degree){ %>
-                <tr class="accessRow">
-                    <th scope="row"><%= i %> </th>
-                    <td><%= degree.studentName %></td>
-                    <td><%= degree.degreeType %></td>
-                    <td><%= degree.major %></td>
-                    <td><%= degree.cgpa %></td>
-                    <td><%= degree.issueDate.toLocaleDateString("en-US") %></td>
-                    <td><a href="/degrees/<%=degree._id%>" class="btn btn-outline-info">View Degree</a></td>
-                </tr>
-                <% i++; }) %>
-            </tbody>
-        </table>
+<div class="container mt-3">
+    <div class="w-100 text-center">
+        <a href="" class="btn btn-outline-info">Return to Dashboard</a>
     </div>
 
-    <script src="/js/jquery-3.4.1.min.js"></script>
-    <script src="/js/popper-1.16.0.min.js"></script>
-    <script src="/js/bootstrap-4.4.1.min.js"></script>
+    <h3 class="mt-3 text-center">All Issued Degrees</h3>
+    <table class="table table-hover mt-3">
+        <thead class="bg-info text-white">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Student</th>
+                <th scope="col">University Email</th>
+                <th scope="col">DegreeType</th>
+                <th scope="col">Major</th>
+                <th scope="col">CGPA</th>
+                <th scope="col">IssueDate</th>
+                <th></th>
 
-    <script src="/js/universityDashboardFunctions.js"></script>
+            </tr>
+        </thead>
+        <tbody>
+            <% var i=1; %>
+            <% university.issuedDegrees.forEach(function(degree){ %>
+            <tr class="accessRow">
+                <th scope="row"><%= i %> </th>
+                <td><%= degree.studentName %></td>
+                <td><%= degree.studentUniversityEmail %></td>
+                <td><%= degree.degreeType %></td>
+                <td><%= degree.major %></td>
+                <td><%= degree.cgpa %></td>
+                <td><%= degree.issueDate.toLocaleDateString("en-US") %></td>
+                <td><a href="/degrees/<%=degree._id%>" class="btn btn-outline-info">View Degree</a></td>
+            </tr>
+            <% i++; }) %>
+        </tbody>
+    </table>
+</div>
 
-</body>
-
-</html>
+<%- include ("./partials/footer") %>

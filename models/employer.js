@@ -13,16 +13,6 @@ const employerSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    blockDegreeEmail:{
-        type: String,
-        required: true,
-        unique: true,
-    },
-    password:{
-        type: String,
-        required: true,
-        minlength: 8
-    },
     location: {
         country: {
             type: String,

@@ -1,0 +1,32 @@
+<%- include ("../partials/header") %>
+
+
+<div class="container text-center mt-5">
+    <h1 class="display-5">Register new Student</h1>
+    <form class="mt-4" action="/register/student" method="POST" style="font-size:1.25rem;">
+        <div class="form-group col-md-4 marginAuto">
+            <label for="username">Personal Email</label>
+            <input type="email" class="form-control" name="username" id="username">
+        </div>
+        <div class="form-group col-md-4">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" name="password" id="password">
+        </div>
+        <div class="form-group col-md-4">
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" class="form-control" name="confirmPassword" id="confirmPassword">
+        </div>
+        <div class="form-group col-md-4 ">
+            <label for="name">Full Name</label>
+            <input type="text" class="form-control" name="name" id="name">
+        </div>
+        <div class="form-group col-md-4 ">
+            <label for="contactNumber">Contact Number</label>
+            <input type="text" class="form-control" name="contactNumber" id="contactNumber">
+        </div>
+        <div class="form-group text-center mt-4">
+            <button type="submit" class="btn btn-outline-success">Sign Up</button>
+        </div>
+    </form>
+</div>
+<%- include ("../partials/footer") %>

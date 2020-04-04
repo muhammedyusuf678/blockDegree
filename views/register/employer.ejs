@@ -1,0 +1,46 @@
+<%- include ("../partials/header") %>
+<div class="container mt-5">
+    <h3 class="text-center">Register new Employer</h3>
+    <form class="mt-2" action="/register/employer" method="POST">
+        <div class="form-group">
+            <label for="username">BlockDegree Email</label>
+            <input type="email" class="form-control" name="username" id="username">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" name="password" id="password">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" class="form-control" name="confirmPassword" id="confirmPassword">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="employerName">Full Name</label>
+            <input type="text" class="form-control" name="employerName" id="employerName">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="companyName">Company Name</label>
+            <input type="text" class="form-control" name="companyName" id="companyName">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="location[country]">Country</label>
+            <input type="text" class="form-control" name="location[country]" id="location[country]">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="location[city]">City</label>
+            <input type="text" class="form-control" name="location[city]" id="location[city]">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="location[poBox]">PO Box</label>
+            <input type="number" class="form-control" name="location[poBox]" id="location[poBox]">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="contactNumber">Contact Number</label>
+            <input type="text" class="form-control" name="contactNumber" id="contactNumber">
+        </div>
+        <div class="form-group text-center">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+</div>
+<%- include ("../partials/footer") %>

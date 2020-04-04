@@ -1,21 +1,18 @@
 var mongoose = require("mongoose");
 mongoose.connect("mongodb://localhost:27017/block_degree", { useNewUrlParser: true, useUnifiedTopology: true });
 
+var User = require("./models/user");
+
 var University = require("./models/university");
 var Student = require("./models/student");
 var Degree = require("./models/degree");
 var Employer = require("./models/employer")
 
+const removeAll = require("./cleardb");
+ 
 var seedUniversity =
 {
     universityName: "American University of Sharjah",
-    userCredentials: [
-        {
-            userEmail: "registrar@aus.edu",
-            userPassword: "mufasa123",
-            accessLevel: 0
-        }
-    ],
     registeredStudentsList: [],
     issuedDegrees: [],
     location: {
@@ -37,17 +34,51 @@ var seedUniversity =
     verified: true
 }
 
+var seedUniversity2 =
+{
+    universityName: "Skyline University College",
+    registeredStudentsList: [],
+    issuedDegrees: [],
+    location: {
+        country: "United Arab Emirates",
+        city: "Sharjah",
+        poBox: 26666
+
+    },
+    contactNumber: 065330632,
+    domainName: "skyline.edu",
+    colleges: [
+        {
+            name: "College of Engineering"
+        },
+        {
+            name: "School of Business Administration"
+        }
+    ],
+    verified: true
+}
+
 
 var seedStudent =
 {
     name: "Muhammed Yusuf",
-    blockDegreeEmail: "muhammedyusuf678@gmail.com",
-    password: "mufasa123",
     universitiesList: [],
     degreesList: [],
     sharesList: [],
     contactNumber: "0501196231",
-    verified: true
+    verified: true,
+    blockDegreeEmail: "muhammedyusuf678@gmail.com"
+}
+
+var seedStudent2 =
+{
+    name: "Saeed Alghabra",
+    universitiesList: [],
+    degreesList: [],
+    sharesList: [],
+    contactNumber: "0501196231",
+    verified: true,
+    blockDegreeEmail: "saeed@gmail.com"
 }
 
 
@@ -66,12 +97,25 @@ var seedDegree =
     issueDate: new Date()
 }
 
+var seedDegree2 =
+{
+    university: mongoose.Types.ObjectId(),
+    student: mongoose.Types.ObjectId(),
+    studentName: "Saeed Al Ghabra",
+    universityName: "Skyline University College",
+    studentUniversityEmail: "b00072056@aus.edu",
+    college: "College of Engineering",
+    major: "Computer Science",
+    cgpa: 3.5,
+    honors: "Magna Cum Laude",
+    degreeType: "Bachelor of Science",
+    issueDate: new Date()
+}
+
 var seedEmployer =
 {
     employerName: "Elon Musk",
     companyName: "Tesla",
-    blockDegreeEmail: "elon@tesla.com",
-    password: "mufasa123",
     location: {
         country: "USA",
         city: "Houston",
@@ -84,8 +128,6 @@ var seedEmployer2 =
 {
     employerName: "Steve Jobs",
     companyName: "Apple",
-    blockDegreeEmail: "steve@apple.com",
-    password: "mufasa123",
     location: {
         country: "USA",
         city: "Houston",
@@ -95,35 +137,23 @@ var seedEmployer2 =
     sharesList: []
 }
 
-async function removeAll() {
-    await University.remove({}, function (err) {
-        if (err)
+function registerUser(username, password, userType, userObject){
+    var newUser = new User({
+        username: username,
+        userType: userType,
+        userObject: userObject
+    });
+    User.register(newUser, password, function (err, savedUser) {
+        if (err) {
             console.log(err);
-        else {
-            console.log("removed universities");
+        }
+        else{
+            console.log("saved User of type:"+savedUser.userType);
+            // console.log(savedUser);
         }
     })
-
-    await Student.remove({}, function (err) {
-        if (err) console.log(err);
-        else {
-            console.log("removed students");
-        }
-    })
-    await Degree.remove({}, function (err) {
-        if (err) console.log(err);
-        else {
-            console.log("removed degrees");
-        }
-    })
-    await Employer.remove({}, function (err) {
-        if (err) console.log(err);
-        else {
-            console.log("removed employers");
-        }
-    })
-    return true;
 }
+
 
 
 async function seedDB() {
@@ -131,11 +161,12 @@ async function seedDB() {
         if (err) console.log(err);
         else {
             console.log("added university");
+            registerUser("registrar@aus.edu","mufasa",'University',savedUniversity._id);
             Student.create(seedStudent, function (err, savedStudent) {
                 if (err) console.log(err);
                 else {
                     console.log("added student");
-
+                    registerUser("muhammedyusuf678@gmail.com","mufasa",'Student',savedStudent._id);
                     savedUniversity.registeredStudentsList.push(savedStudent);
 
                     savedStudent.universitiesList.push({
@@ -172,6 +203,7 @@ async function seedDB() {
                                 if (err) console.log(err)
                                 else {
                                     console.log("added employer");
+                                    registerUser("elon@tesla.com","mufasa",'Employer',savedEmployer._id);
                                     savedEmployer.sharesList.push(savedDegree);
                                     savedStudent.sharesList.push({
                                         degree: savedDegree,
@@ -196,16 +228,39 @@ async function seedDB() {
                                 if (err) console.log(err)
                                 else {
                                     console.log("added 2nd employer")
+                                    registerUser("steve@apple.com","mufasa",'Employer',savedEmployer._id);
+
                                 }
                             })
-                            console.log("done seeding");
-                            return true;
                         }
                     })
                 }
             })
         }
     })
+    await University.create(seedUniversity2, async function (err, savedUniversity) {
+        if (err) console.log(err)
+        else {
+            console.log("added 2nd university")
+            registerUser("registrar@skyline.com","mufasa",'University',savedUniversity._id);
+        }
+    })
+
+    await Student.create(seedStudent2, async function (err, savedStudent) {
+        if (err) console.log(err)
+        else {
+            console.log("added 2nd student")
+            registerUser("saeed@gmail.com","mufasa",'Student',savedStudent._id);
+        }
+    })
+
+    await Degree.create(seedDegree2, async function (err, savedDegree) {
+        if (err) console.log(err)
+        else {
+            console.log("added 2nd degree")
+        }
+    })
+    
 }
 
 async function main() {
@@ -219,3 +274,5 @@ main();
 module.exports = {
     seedDegree: seedDegree
 }
+
+

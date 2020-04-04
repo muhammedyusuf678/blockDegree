@@ -4,6 +4,8 @@ var Degree = require("./models/degree")
 var Student = require("./models/student")
 var University = require("./models/university")
 var Employer = require("./models/employer")
+var User = require("./models/user")
+
 
 
 var dbFunctions = {
@@ -86,7 +88,21 @@ var dbFunctions = {
                 return resultSet[0];
             }
         }))[0]
+    },
+    findUserByBlockDegreeEmail: async function  (email) {
+        return (await User.find({username: email}, function(err,resultSet){
+            if(err) { 
+                console.log (err);
+                return false;
+            }
+            else {
+                console.log("found User");
+                console.log(resultSet[0]);
+                return resultSet[0];
+            }
+        }))[0]
     }
+    
 }   
 
 module.exports = dbFunctions
