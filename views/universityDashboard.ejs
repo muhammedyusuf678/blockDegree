@@ -1,15 +1,5 @@
 <%- include ("./partials/header") %>
 
-
-<div class="p-4 text-center" style="background-color: gainsboro;">
-    <div class="d-inline-block">
-        <!-- <img src="/images/aus-logo.png" alt="university logo" style="width: 150px; height:150px; float:center;"
-                class="ml-3 mr-3"> -->
-        <i class="fas fa-university fa-7x mr-3"></i>
-    </div>
-    <h1 class="display-5 d-inline-block"><%=university.universityName%>'s<br>Dashboard</h1>
-</div>
-
 <div class="container mt-5 text-center">
     <div class="row">
         <!-- <div class="col">
@@ -26,6 +16,13 @@
             <a href="/university/<%=university._id%>/viewIssuedDegrees"
                 class="btn btn-outline-info w-100 p-4 rem1-25"><i class="fas fa-file-alt mr-2"></i>View All Issued
                 Degrees</a>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col">
+            <a href="/university/<%=university._id%>/viewSharedDegrees"
+                class="btn btn-outline-info w-100 p-4 rem1-25"><i class="fas fa-file-alt mr-2"></i>View All Degrees Shared With You
+                </a>
         </div>
     </div>
     <div class="row mt-4">

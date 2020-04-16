@@ -9,6 +9,10 @@ module.exports = {
         if(req.isAuthenticated()){
             return next();
         }
+        //must be immediately before redirect
+        //have to handle in template and route
+        //lets u add some data one-time to a page 
+        req.flash("error","Please Login First!");
         res.redirect("/login");
     },
     checkUserUniversityDashboard: function(req,res,next){
@@ -92,12 +96,23 @@ module.exports = {
                     break;
                 case 'University':
                     if(req.user.userObject.equals(foundDegree.university)){
-                        next();
+                        return next();
                     }
-                    else {
-                        console.log("this is degree was awarded by another university - you do not have access");
-                        res.redirect("/"+req.user.userType.toLowerCase()+"/"+req.user.userObject)
-                    }
+                    University.findById(req.user.userObject,function(err,foundUniversity){
+                        if(err){
+                            console.log(err);
+                            console.log("some error occurred");
+                            return res.redirect("/"+req.user.userType.toLowerCase()+"/"+req.user.userObject)
+                        }
+                        for (var i = 0;i<foundUniversity.sharesList.length;i++){
+                            if(foundDegree._id.equals(foundUniversity.sharesList[i])){
+                                return next();
+                            }
+                        }
+                        console.log("this degree was not awarded by your institution or has not been shared with you by the student")
+                        return res.redirect("/"+req.user.userType.toLowerCase()+"/"+req.user.userObject) 
+                    })
+
                     break;
                 case 'Employer':
                     Employer.findById(req.user.userObject,function(err,foundEmployer){

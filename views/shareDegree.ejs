@@ -2,7 +2,7 @@
 
 <div class="container mt-4">
     <div class="h-100 text-center">
-        <a href="" class="btn btn-outline-info"><i class="fas fa-arrow-circle-left mr-2"></i>Return to
+        <a href="/<%=currentUser.userType.toLowerCase()%>/<%=currentUser.userObject%>" class="btn btn-outline-info"><i class="fas fa-arrow-circle-left mr-2"></i>Return to
             Dashboard</a>
     </div>
     <h1 class="display-heading-4 text-center mt-4">Share your<br>
@@ -29,9 +29,10 @@
         <thead class="bg-info text-white">
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">Employer Name</th>
-                <th scope="col">Company Name</th>
-                <th scope="col">BlockDegree Email</th>
+                <th scope="col">Type</th>
+                <th scope="col">Name</th>
+                <th scope="col">Institution</th>
+                <th scope="col">Email</th>
                 <th scope="col">Contact Number</th>
                 <th></th>
 
@@ -42,11 +43,20 @@
             <% sharesList.forEach(function(share){ %>
             <tr class="accessRow">
                 <th scope="row"><%= i %> </th>
-                <td><%=share.employer.employerName%></td>
-                <td><%=share.employer.companyName%></td>
-                <td><%=share.employer.blockDegreeEmail%></td>
-                <td><%=share.employer.contactNumber%></td>
-                <td><a href="/degrees/<%=degree._id%>/revoke/<%=share.employer._id%>"
+                <td><%=share.userType%></td>
+                <%if(share.userType === 'Employer'){%>
+                    <td><%=share.sharedWith.employerName%></td>
+                <%}else{%>
+                    <td>Registrar</td>
+                <%}%>
+                <%if(share.userType === 'Employer'){%>
+                    <td><%=share.sharedWith.companyName%></td>
+                <%}else{%>
+                    <td><%=share.sharedWith.universityName%></td>
+                <%}%>
+                <td><%=share.sharedWith.blockDegreeEmail%></td>
+                <td><%=share.sharedWith.contactNumber%></td>
+                <td><a href="/degrees/<%=degree._id%>/revoke/<%=share.sharedWith._id%>"
                         class="btn btn-outline-danger p-2"><i class="fas fa-minus-circle mr-2"></i>Unshare</a></td>
             </tr>
             <% i++; }) %>

@@ -13,6 +13,11 @@ const universitySchema = new mongoose.Schema({
             required: true
         }
     ],
+    blockDegreeEmail: {
+        type:String,
+        required: true,
+        unique: true
+    },
     // registeredStudentsList:[
     //     {
     //         studentReference: {
@@ -66,16 +71,23 @@ const universitySchema = new mongoose.Schema({
     verified: {
         type: Boolean,
         default: false
-    }
-    // ,
-    // dean: {
-    //     type:String,
-    //     required: true
-    // },
-    // chancellor: {
-    //     type: String,
-    //     required: true
-    // }
+    },
+    dean: {
+        type:String,
+        required: true
+    },
+    chancellor: {
+        type: String,
+        required: true
+    },
+    sharesList: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Degree',
+            required: true
+        }
+    ]
+
 });
 
 //compile into model which has methods

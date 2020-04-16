@@ -1,10 +1,58 @@
+/* Montserrat-300 - latin */
+@font-face {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 300;
+    src: url("../fonts/montserrat/Montserrat-Light.ttf");
+    /* IE9 Compat Modes */ }
+  @font-face {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 400;
+    src: url("../fonts/montserrat/Montserrat-Regular.ttf");
+    /* IE9 Compat Modes */ }
+  @font-face {
+    font-family: 'Montserrat';
+    font-style: italic;
+    font-weight: 400;
+    src: url("../fonts/montserrat/Montserrat-Italic.ttf");
+    /* IE9 Compat Modes */ }
+  @font-face {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 500;
+    src: url("../fonts/montserrat/Montserrat-Medium.ttf");
+    /* IE9 Compat Modes */ }
+  @font-face {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 600;
+    src: url("../fonts/montserrat/Montserrat-SemiBold.ttf");
+    /* IE9 Compat Modes */ }
+  @font-face {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 700;
+    src: url("../fonts/montserrat/Montserrat-Bold.ttf");
+    /* IE9 Compat Modes */ }
+  @font-face {
+    font-family: 'Montserrat';
+    font-style: italic;
+    font-weight: 700;
+    src: url("../fonts/montserrat/Montserrat-BoldItalic.ttf");
+    /* IE9 Compat Modes */ }
+  @font-face {
+    font-family: 'Montserrat';
+    font-style: italic;
+    font-weight: 900;
+    src: url("../fonts/montserrat/montserrat-v12-latin-900.ttf"), url("../fonts/montserrat/montserrat-v12-latin-900.eot") format("embedded-opentype"), url("../fonts/montserrat/montserrat-v12-latin-900.svg") format("woff2"), url("../fonts/montserrat/montserrat-v12-latin-900.woff") format("woff"), url("../fonts/montserrat/montserrat-v12-latin-900.woff2") format("truetype"); }
+/* --------------- */
 @font-face {
     font-family: 'diplomaregular';
     src: url('diploma_regular-webfont.woff2') format('woff2'),
          url('diploma_regular-webfont.woff') format('woff');
     font-weight: normal;
     font-style: normal;
-
 }
 
 .accessRow td, .accessRow th {
@@ -93,6 +141,8 @@ html {
 
 body {
     margin-bottom:150px;
+    font-family: 'Montserrat';
+
 }
 
 footer {
@@ -104,4 +154,5 @@ footer {
     width: 100%;
     overflow: hidden;
 }
+
 

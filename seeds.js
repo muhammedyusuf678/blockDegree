@@ -31,7 +31,11 @@ var seedUniversity =
             name: "School of Business Administration"
         }
     ],
-    verified: true
+    verified: true,
+    dean: "Sirin Tekinay",
+    chancellor: "Kevin Mitchell",
+    sharesList: [],
+    blockDegreeEmail: "registrar@aus.edu"
 }
 
 var seedUniversity2 =
@@ -46,7 +50,7 @@ var seedUniversity2 =
 
     },
     contactNumber: 065330632,
-    domainName: "skyline.edu",
+    domainName: "sky.edu",
     colleges: [
         {
             name: "College of Engineering"
@@ -55,7 +59,12 @@ var seedUniversity2 =
             name: "School of Business Administration"
         }
     ],
-    verified: true
+    verified: true,
+    dean: "Raj Mithra",
+    chancellor: "Jacob Peters",
+    sharesList: [],
+    blockDegreeEmail: "registrar@sky.edu"
+
 }
 
 
@@ -122,7 +131,9 @@ var seedEmployer =
         poBox: 2666
     },
     contactNumber: 1209832,
-    sharesList: []
+    sharesList: [],
+    blockDegreeEmail: "elon@tesla.com"
+
 }
 var seedEmployer2 =
 {
@@ -134,7 +145,9 @@ var seedEmployer2 =
         poBox: 2666
     },
     contactNumber: 1209832,
-    sharesList: []
+    sharesList: [],
+    blockDegreeEmail: "steve@apple.com"
+
 }
 
 function registerUser(username, password, userType, userObject){
@@ -189,11 +202,11 @@ async function seedDB() {
                             savedStudent.degreesList.push(savedDegree);
 
                             savedUniversity.issuedDegrees.push(savedDegree);
-                            await savedUniversity.save(function (err) {
-                                if (err) console.log(err);
-                                else console.log("updated university")
+                            // await savedUniversity.save(function (err) {
+                            //     if (err) console.log(err);
+                            //     else console.log("updated university")
 
-                            });
+                            // });
                             // console.log("Saved data is: ");
                             // console.log(savedUniversity);
                             // console.log(savedStudent);
@@ -205,9 +218,16 @@ async function seedDB() {
                                     console.log("added employer");
                                     registerUser("elon@tesla.com","mufasa",'Employer',savedEmployer._id);
                                     savedEmployer.sharesList.push(savedDegree);
+                                    savedUniversity.sharesList.push(savedDegree);
                                     savedStudent.sharesList.push({
                                         degree: savedDegree,
-                                        employer: savedEmployer
+                                        userType: 'Employer',
+                                        sharedWith: savedEmployer
+                                    });
+                                    savedStudent.sharesList.push({
+                                        degree: savedDegree,
+                                        userType: 'University',
+                                        sharedWith: savedUniversity
                                     });
 
                                     await savedEmployer.save(function (err) {
@@ -221,6 +241,13 @@ async function seedDB() {
                                         else console.log("updated student")
         
                                     });
+
+                                    await savedUniversity.save(function (err) {
+                                        if (err) console.log(err);
+                                        else {
+                                            console.log("updated university and shared degree with it");
+                                        }
+                                    })
 
                                 }
                             })
@@ -242,7 +269,7 @@ async function seedDB() {
         if (err) console.log(err)
         else {
             console.log("added 2nd university")
-            registerUser("registrar@skyline.com","mufasa",'University',savedUniversity._id);
+            registerUser("registrar@sky.edu","mufasa",'University',savedUniversity._id);
         }
     })
 

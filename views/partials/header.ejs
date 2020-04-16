@@ -20,9 +20,11 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
+                <%if(currentUser){%>
                 <li class="nav-item active">
                     <a class="nav-link" href="#">Dashboard <span class="sr-only">(current)</span></a>
                 </li>
+                <%}%>
                 <li class="nav-item">
                     <a class="nav-link" href="#">About</a>
                 </li>
@@ -31,15 +33,69 @@
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">
+                <% if(!currentUser){ %>
                 <li class="nav-item ">
                     <a class="nav-link" href="/register">Sign Up</a>
                 </li>
                 <li class="nav-item ">
                     <a class="nav-link" href="/login">Log In</a>
                 </li>
+                <%} else {%>
+                <li class="nav-item ">
+                    <a class="nav-link" href="#">Signed in as: <%=currentUser.username%></a>
+                </li>
                 <li class="nav-item ">
                     <a class="nav-link" href="/logout">Log Out</a>
                 </li>
+                <%}%>
             </ul>
         </div>
     </nav>
+    <%if(currentUser && !(currentUrl.includes("register") || currentUrl.includes("view") ) ){%>
+        <%#do stuff if var is defined and not null%>
+        <%if(currentUser.userType === 'University' && typeof university !== 'undefined' && university){%>
+                <div class="p-4 text-center" style="background-color: gainsboro;">
+                    <div class="d-inline-block">
+                        <i class="fas fa-university fa-7x mr-3"></i>
+                    </div>
+                    <h1 class="display-5 d-inline-block"><%=university.universityName%>'s<br>Dashboard</h1>
+                </div>
+        <%}%>
+        <%if(currentUser.userType === 'Student' && typeof student !== 'undefined' && student){%>
+                <div class="p-4 text-center darkPurple text-white">
+                    <div class="d-inline-block">
+                        <i class="fas fa-user-graduate fa-7x mr-3"></i>
+                    </div>
+                    <div class="d-inline-block h-100">
+                        <h1 class="display-5 d-inline-block vertical-middle"><%=student.name%>'s Dashboard</h1>
+                    </div>
+                </div>
+        <%}%>
+        <%if(currentUser.userType === 'Employer' && typeof employer !== 'undefined' && employer){%>
+                <div class="p-4 text-center lightGreen">
+                    <div class="d-inline-block">
+                        <img src="/images/employer-logo.png" alt="employer logo"
+                            style="width: 150px; height:150px; float:center;" class="ml-3 mr-3">
+                    </div>
+                    <h1 class="display-5 d-inline-block vertical-middle"><%=employer.employerName%>'s Dashboard</h1>
+                </div>
+        <%}%>
+    <%}%>
+    <div class="container">
+        <%if(errorFlash && errorFlash.length > 0){%>
+                <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                    <strong><%=errorFlash%></strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <%}%>
+        <%if(successFlash && successFlash.length >0){%>
+                <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                    <strong><%=successFlash%></strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <%}%>
+    </div>

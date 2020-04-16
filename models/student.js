@@ -40,11 +40,20 @@ const studentSchema = new mongoose.Schema({
                 ref: 'Degree',
                 required: true
             },
-            employer: {
+            userType: { 
+                type: String, 
+                required: true,
+                enum: ['Employer','University']//can be anyone
+            },
+            sharedWith: {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: 'Degree',
-                required: true
+                refPath: 'sharesList.userType',
             }
+            // employer: {
+            //     type: mongoose.Schema.Types.ObjectId,
+            //     ref: 'Degree',
+            //     required: true
+            // }
         }
     ],
     contactNumber: {

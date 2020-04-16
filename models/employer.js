@@ -9,6 +9,11 @@ const employerSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    blockDegreeEmail: {
+        type:String,
+        required: true,
+        unique: true
+    },
     companyName: {
         type: String,
         required: true,

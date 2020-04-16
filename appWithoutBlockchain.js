@@ -22,8 +22,14 @@ var Student = require("./models/student")
 var University = require("./models/university")
 var Employer = require("./models/employer")
 
+var majorsList = require("./static_data/majors")
+var degreeTypesList = require("./static_data/degreeTypes")
+
 const dbFunctions = require("./dbFunctions")
 const middleware = require("./middleware");
+
+var flash = require("connect-flash");
+app.use(flash());//before passport configuration
 
 //--------------------auth config
 app.use(expressSession({
@@ -39,23 +45,42 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 app.use(function (req, res, next) {
     res.locals.currentUser = req.user;
+    res.locals.errorFlash = req.flash("error");
+    res.locals.successFlash = req.flash("success");
+    res.locals.currentUrl = req.originalUrl;
     next();
 })
 //--------------------
 
 app.get("/", function (req, res) {
+    if (req.isAuthenticated()) {
+        return res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject);
+    }
     res.render("index");
 })
 
+app.get("/test",function (req,res){
+    res.render("template")
+})
+
 app.get("/register", function (req, res) {
+    if (req.isAuthenticated()) {
+        return res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject);
+    }
     res.render("register/index")
 })
 
 app.get("/register/student", function (req, res) {
+    if (req.isAuthenticated()) {
+        return res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject);
+    }
     res.render("register/student")
 })
 
 app.get("/register/employer", function (req, res) {
+    if (req.isAuthenticated()) {
+        return res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject);
+    }
     res.render("register/employer")
 })
 
@@ -73,6 +98,8 @@ app.post("/register/student", function (req, res) {
     Student.create(newStudent, (err, savedStudent) => {
         if (err) {
             console.log(err)
+            req.flash("error", "User registration failed. Please try again later")
+            return res.render("register/index");
         }
         else {
             console.log("successfully added new student: ");
@@ -90,6 +117,7 @@ app.post("/register/student", function (req, res) {
                         if (err) console.log(err);
                         else {
                             console.log("user registration failed -- deleted student")
+                            req.flash("error", "User registration failed. Please try again later")
                             return res.render("register/index");
                         }
                     })
@@ -98,6 +126,7 @@ app.post("/register/student", function (req, res) {
                     console.log("saved User:");
                     console.log(savedUser);
                     passport.authenticate("local")(req, res, function () {
+                        req.flash("success", "Welcome to BlockDegree, " + savedStudent.name)
                         res.redirect("/student/" + savedStudent._id);
                     })
                 }
@@ -120,6 +149,8 @@ app.post("/register/employer", function (req, res) {
     Employer.create(newEmployer, (err, savedEmployer) => {
         if (err) {
             console.log(err)
+            req.flash("error", "User registration failed. Please try again later")
+            return res.render("register/index");
         }
         else {
             console.log("successfully added new employer: ");
@@ -137,6 +168,7 @@ app.post("/register/employer", function (req, res) {
                         if (err) console.log(err);
                         else {
                             console.log("user registration failed -- deleted employer")
+                            req.flash("error", "User registration failed. Please try again later")
                             return res.render("register/index");
                         }
                     })
@@ -145,6 +177,7 @@ app.post("/register/employer", function (req, res) {
                     console.log("saved User:");
                     console.log(savedUser);
                     passport.authenticate("local")(req, res, function () {
+                        req.flash("success", "Welcome to BlockDegree, " + savedEmployer.employerName)
                         res.redirect("/employer/" + savedEmployer._id);
                     })
                 }
@@ -154,6 +187,9 @@ app.post("/register/employer", function (req, res) {
 })
 
 app.get("/login", function (req, res) {
+    if (req.isAuthenticated()) {
+        return res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject);
+    }
     res.render("login");
 })
 
@@ -176,6 +212,7 @@ app.post("/login", passport.authenticate("local", {
 //logout route
 app.get("/logout", function (req, res) {
     req.logout();
+    req.flash("success", "Logged Out Successfully!")
     res.redirect("/")
 })
 
@@ -186,23 +223,26 @@ app.get("/university/:id", middleware.isLoggedIn, middleware.checkUserUniversity
 
 app.get("/university/:id/addDegree", middleware.isLoggedIn, middleware.checkUserDashboard, function (req, res) {
     var universityId = req.params.id;
-    res.render("addDegree", { universityId: universityId })
+    res.render("addDegree", { universityId: universityId, majors: majorsList, degreeTypes: degreeTypesList })
 })
 
 app.post("/university/:id/addDegree", middleware.isLoggedIn, middleware.checkUserUniversityDashboard, async function (req, res) {
     console.log("post request received in /addDegree");
+    console.log(req.body)
     var studentEmail = req.body.student;
     var universityId = req.body.university;
     // var foundStudent = await dbFunctions.findStudentByBlockDegreeEmail(studentEmail);
 
     var foundUser = await dbFunctions.findUserByBlockDegreeEmail(studentEmail)
-    if(!foundUser){
+    if (!foundUser) {
         console.log("no such user exists");
-        return res.redirect("/"+req.user.userType.toLowerCase()+"/"+req.user.userObject)
+        req.flash("error", "No such User exists")
+        return res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject)
     }
-    if(foundUser.userType != 'Student'){
+    if (foundUser.userType != 'Student') {
         console.log("degrees can only be awarded to student users")
-        return res.redirect("/"+req.user.userType.toLowerCase()+"/"+req.user.userObject)
+        req.flash("error", "Degrees can only be awarded to student users!")
+        return res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject)
     }
     var foundStudent = await dbFunctions.findStudentById(foundUser.userObject);
 
@@ -213,15 +253,16 @@ app.post("/university/:id/addDegree", middleware.isLoggedIn, middleware.checkUse
     // console.log(foundUniversity);
 
     var foundRegistered = false;
-    for (var i = 0; i <foundUniversity.registeredStudentsList.length; i++){
-        if(foundStudent._id.equals(foundUniversity.registeredStudentsList[i])){
+    for (var i = 0; i < foundUniversity.registeredStudentsList.length; i++) {
+        if (foundStudent._id.equals(foundUniversity.registeredStudentsList[i])) {
             foundRegistered = true;
         }
     }
-    if(!foundRegistered){
+    if (!foundRegistered) {
         console.log("degrees can only be awarded to students registered with your institution")
-        console.log("the student specified is not registered with you")
-        return res.redirect("/"+req.user.userType.toLowerCase()+"/"+req.user.userObject)
+        console.log("The student specified is not registered with you")
+        req.flash("error", "Degrees can only be awarded to students registered with your institution. The student specified is not registered with you")
+        return res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject)
     }
     var newDegree = {
         ...req.body,
@@ -250,6 +291,8 @@ app.post("/university/:id/addDegree", middleware.isLoggedIn, middleware.checkUse
     Degree.create(dummyDegree, async function (err, savedDummyDegree) {
         if (err) {
             console.log(err);
+            req.flash("error", "Database Error: Could not create degree. Please try again later")
+            res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject)
         }
         else {
             // console.log("saved dummy degree")
@@ -257,6 +300,8 @@ app.post("/university/:id/addDegree", middleware.isLoggedIn, middleware.checkUse
             await Degree.findOneAndUpdate({ _id: savedDummyDegree._id }, { $set: newDegree }, { new: true }, async function (err, savedFinalDegree) {
                 if (err) {
                     console.log(err);
+                    req.flash("error", "Database Error: Could not create degree. Please try again later")
+                    return res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject)
                 }
                 console.log("final degree saved to DB: " + savedFinalDegree);
                 foundStudent.degreesList.push(savedFinalDegree);
@@ -268,13 +313,14 @@ app.post("/university/:id/addDegree", middleware.isLoggedIn, middleware.checkUse
                     if (err) console.log(err)
                 });
             })
-            res.redirect("/"+req.user.userType.toLowerCase()+"/"+req.user.userObject)
+            req.flash("success","New Degree Awarded Successfully")
+            res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject)
         }
     })
 })
 
 
-app.get("/university/:id/viewIssuedDegrees",middleware.isLoggedIn, middleware.checkUserDashboard, function (req, res) {
+app.get("/university/:id/viewIssuedDegrees", middleware.isLoggedIn, middleware.checkUserDashboard, function (req, res) {
     //async await
     console.log("get request recieved in viewIssuedDegrees")
     var universityId = req.params.id;
@@ -284,7 +330,19 @@ app.get("/university/:id/viewIssuedDegrees",middleware.isLoggedIn, middleware.ch
             res.render("viewIssuedDegrees", { university: foundUniversity })
         }
     })
+})
 
+
+app.get("/university/:id/viewSharedDegrees", middleware.isLoggedIn, middleware.checkUserDashboard, function (req, res) {
+    //async await
+    console.log("get request recieved in viewSharedDegrees")
+    var universityId = req.params.id;
+    University.findById(universityId).populate("sharesList").exec(function (err, foundUniversity) {
+        if (err) console.log(err);
+        else {
+            res.render("viewSharedDegrees", { university: foundUniversity })
+        }
+    })
 })
 
 app.get("/university/:id/viewAllStudents", middleware.isLoggedIn, middleware.checkUserDashboard, function (req, res) {
@@ -310,7 +368,6 @@ app.get("/degrees/:id", middleware.isLoggedIn, middleware.canViewDegree, async f
         else {
             console.log("foundDegree in show degree route")
             console.log(foundDegree);
-
             res.render("viewDegree", { degree: foundDegree });
         }
     })
@@ -320,18 +377,63 @@ app.get("/student/:id", middleware.isLoggedIn, middleware.checkUserStudentDashbo
     res.render("studentDashboard", { student: req.student })
 })
 
+app.get("/student/:id/registerWithUniversity", middleware.isLoggedIn, middleware.checkUserDashboard, function (req, res) {
+    console.log("get request recieved in registerWithUniversity")
+    University.find({}, function (err, foundUniversities) {
+        if (err) {
+            console.log(err);
+            res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject)
+        }
+        else {
+            Student.findById(req.params.id)
+                .populate({
+                    path: 'universitiesList.universityReference',
+                    model: 'University'
+                }).exec(function (err, foundStudent) {
+                    if (err) {
+                        console.log(err);
+                        res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject)
+                    }
+                    else {
+                        console.log("found student populated university list")
+                        console.log(foundStudent);
+                        res.render("registerWithUniversity", { allUniversities: foundUniversities, student: foundStudent })
+                    }
+                })
+        }
+    })
+})
+
+app.post("/student/:id/registerWithUniversity", middleware.isLoggedIn, middleware.checkUserStudentDashboard, function (req, res) {
+    console.log("post request recieved in registerWithUniversity");
+    console.log(req.body);
+    var selectedUniversity = req.body.university;
+
+    var newRegisteredUniversityForStudent = {
+        universityReference: selectedUniversity,
+        studentUniversityEmail: req.body.studentUniversityEmail,
+        verified: false
+    }
+
+    req.student.universitiesList.push(newRegisteredUniversityForStudent);
+    req.student.save(function (err) {
+        if (err) console.log(err);
+        else {
+            console.log("updated student with new university entry");
+            req.flash("success","A verification email has been sent to your university email for verification")
+            res.redirect("/student/" + req.student._id + "/registerWithUniversity")
+        }
+    })
+
+})
+
 app.get("/degrees/:id/share", middleware.isLoggedIn, middleware.canShareRevoke, async function (req, res) {
     var id = req.params.id;
     var foundDegree = req.degree;
     await Student.findById(foundDegree.student)
-        .populate({
-            path: 'sharesList.degree',
-            model: 'Degree'
-        })
-        .populate({
-            path: "sharesList.employer",
-            model: "Employer"
-        })
+        .populate("sharesList.degree")
+        .populate("sharesList.sharedWith")
+            // model: "sharesList.userType"
         .exec(function (err, foundStudent) {
             if (err) console.log(err);
             else {
@@ -344,6 +446,7 @@ app.get("/degrees/:id/share", middleware.isLoggedIn, middleware.canShareRevoke, 
                 var relevantShares = foundStudent.sharesList.filter(function (share) {
                     // console.log(share)
                     if (String(share.degree._id) == String(foundDegree._id)) {
+                        console.log(share);
                         return share;
                     }
                 })
@@ -352,84 +455,109 @@ app.get("/degrees/:id/share", middleware.isLoggedIn, middleware.canShareRevoke, 
         })
 })
 
-app.post("/degrees/:id/share",middleware.isLoggedIn, middleware.canShareRevoke, async function (req, res) {
+app.post("/degrees/:id/share", middleware.isLoggedIn, middleware.canShareRevoke, async function (req, res) {
     console.log("post request recieved in /shareDegree ")
     var blockDegreeEmail = req.body.blockDegreeEmail;
     var degreeID = req.params.id;
     var foundDegree = req.degree;
     var foundStudent = await dbFunctions.findStudentById(foundDegree.student)
     var foundUser = await dbFunctions.findUserByBlockDegreeEmail(blockDegreeEmail);
-    if(!foundUser){
+    if (!foundUser) {
         console.log("no such user exists");
-        return res.redirect("/"+req.user.userType.toLowerCase()+"/"+req.user.userObject)
+        req.flash("error","No such user exists!")
+        return res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject)
     }
-    if(foundUser.userType != 'Employer'){
-        console.log("degrees can only be shared with employer users")
-        return res.redirect("/"+req.user.userType.toLowerCase()+"/"+req.user.userObject)
+    if (foundUser.userType == 'Student') {
+        console.log("degrees can only be shared with employer or university accounts")
+        req.flash("error","Degrees can only be shared with employer or university accounts")
+        return res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject)
     }
-    var foundEmployer = await dbFunctions.findEmployerById(foundUser.userObject);
+
+    var accountToShareWith;
+    if (foundUser.userType == 'Employer') {
+        accountToShareWith = await dbFunctions.findEmployerById(foundUser.userObject);
+    }
+    else if (foundUser.userType == 'University') {
+        accountToShareWith = await dbFunctions.findUniversityById(foundUser.userObject);
+    }
 
     await foundStudent.sharesList.push({
         degree: foundDegree,
-        employer: foundEmployer
+        userType: foundUser.userType,
+        sharedWith: accountToShareWith
     })
 
-    await foundEmployer.sharesList.push(foundDegree);
+    await accountToShareWith.sharesList.push(foundDegree);
 
     await foundStudent.save(function (err) {
         if (err) console.log(err);
         else console.log("saved student");
     })
 
-    await foundEmployer.save(function (err) {
+    await accountToShareWith.save(function (err) {
         if (err) console.log(err);
         else {
-            console.log("saved Employer")
+            console.log("saved accountToShareWith")
+            req.flash("success","Degree shared successfully!")
             res.redirect("/degrees/" + degreeID + "/share");
         }
     })
 })
 
-app.get("/degrees/:id/revoke/:employerid", middleware.isLoggedIn, middleware.canShareRevoke,async function (req, res) {
+app.get("/degrees/:id/revoke/:sharedWithId", middleware.isLoggedIn, middleware.canShareRevoke, async function (req, res) {
     console.log("***********")
     console.log("post request recieved in /revokeDegree ")
     var degreeId = req.params.id;
-    var employerId = req.params.employerid;
+    var sharedWithId = req.params.sharedWithId;
 
     //unexpanded/unpopulated.
     var foundDegree = req.degree;
-    var foundEmployer = await dbFunctions.findEmployerById(employerId);
+
+    var foundSharedWith;
     Student.findById(foundDegree.student)
-        .populate({
-            path: 'sharesList.degree',
-            model: 'Degree'
-        })
-        .populate({
-            path: "sharesList.employer",
-            model: "Employer"
-        })
+        .populate("sharesList.degree")
+        .populate("sharesList.sharedWith")
+        // .populate({
+        //     path: 'sharesList.degree',
+        //     model: 'Degree'
+        // })
+        // .populate({
+        //     path: "sharesList.employer",
+        //     model: "Employer"
+        // })
         .exec(async function (err, foundStudent) {
             if (err) console.log(err)
             else {
                 console.log("found student in /revokeDegree");
                 console.log(foundStudent);
-                foundEmployer.sharesList = foundEmployer.sharesList.filter(function (degree) {
+                
+                var sharedWithUserType;
+                foundStudent.sharesList = foundStudent.sharesList.filter(function (share) {
+                    if (!((String(share.degree._id) == String(degreeId)) && (String(share.sharedWith._id) == String(sharedWithId)))) {
+                        return share;
+                    }
+                    else {
+                        sharedWithUserType = share.userType //only executed once for the match
+                    }
+                })
+
+                if(sharedWithUserType === 'Employer'){
+                    foundSharedWith = await dbFunctions.findEmployerById(sharedWithId);
+                }
+                else if (sharedWithUserType === 'University'){
+                    foundSharedWith = await dbFunctions.findUniversityById(sharedWithId);
+                }
+                foundSharedWith.sharesList = foundSharedWith.sharesList.filter(function (degree) {
                     if (String(degree) != String(degreeId)) {
                         return degree;
                     }
                 })
 
-                foundStudent.sharesList = foundStudent.sharesList.filter(function (share) {
-                    if (!((String(share.degree._id) == String(degreeId)) && (String(share.employer._id) == String(employerId)))) {
-                        return share;
-                    }
-                })
-
-                await foundEmployer.save(function (err) {
+                await foundSharedWith.save(function (err) {
                     if (err) console.log(err)
                     else {
-                        console.log("saved employer");
-                        console.log(foundEmployer)
+                        console.log("saved foundSharedWith");
+                        console.log(foundSharedWith)
                     }
                 })
 
@@ -438,6 +566,7 @@ app.get("/degrees/:id/revoke/:employerid", middleware.isLoggedIn, middleware.can
                     else {
                         console.log("saved student")
                         console.log(foundStudent);
+                        req.flash("success","Degree unshared!")
                         res.redirect("/degrees/" + degreeId + "/share");
                     }
                 })

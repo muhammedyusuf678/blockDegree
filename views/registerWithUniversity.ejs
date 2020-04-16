@@ -1,0 +1,55 @@
+<%- include ("./partials/header") %>
+<div class="container text-center mt-3">
+    <div class="h-100 text-center">
+        <a href="/<%=currentUser.userType.toLowerCase()%>/<%=currentUser.userObject%>" class="btn btn-outline-info"><i class="fas fa-arrow-circle-left mr-2"></i>Return to
+            Dashboard</a>
+    </div>
+    <h1 class="display-heading-4 text-center mt-4">Register With A University</h1>
+    <form class="mt-4" action="/student/<%=student._id%>/registerWithUniversity" method="POST" style="font-size:1.25rem;">
+        <div class="form-group col-md-4 marginAuto">
+            <label for="university">Select University: </label><br>
+            <select name="university" class="custom-select">
+                <% allUniversities.forEach(function(university){ %>
+                <option value="<%=university._id%>"><%=university.universityName%></option>
+                <%})%>
+            </select>
+        </div>
+        <div class="form-group col-md-4">
+            <label for="studentUniversityEmail">Student University Email: </label>
+            <input type="email" class="form-control" name="studentUniversityEmail" id="studentUniversityEmail"
+                placeholder="b000XXXXX@uni.edu"/>
+        </div>
+        <div class="form-group col-md-4 mt-2">
+            <p class="text-muted" style="font-size: 1rem;">A verification email will be sent to the following university email. The domain must match that of the selected university</p>
+        </div>
+        <div class="form-group text-center mt-4">
+            <button type="submit" class="btn btn-outline-success">Submit</button>
+        </div>
+    </form>
+
+    <hr style="border-top:5px solid rgba(0,0,0,.1)" class="mt-4">
+
+    <h1 class="mt-4 display-heading-4 text-center">Registered Universities</h1>
+    <table class="table table-hover mt-4">
+        <thead class="bg-info text-white">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">University Name</th>
+                <th scope="col">University Email</th>
+                <th scope="col">Verified</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% var i=1; %>
+            <% student.universitiesList.forEach(function(item){ %>
+                <tr class="accessRow">
+                    <th scope="row"><%= i %> </th>
+                    <td><%=item.universityReference.universityName%></td>
+                    <td><%=item.studentUniversityEmail%></td>
+                    <td><%=item.verified%></td>
+                </tr>
+                <%})%>
+        </tbody>
+    </table>
+</div>
+<%- include ("./partials/footer") %>

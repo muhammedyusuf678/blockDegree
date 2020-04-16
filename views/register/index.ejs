@@ -1,26 +1,31 @@
 <%- include ("../partials/header") %>
-<div class="p-4 text-center" style="background-color: gainsboro;">
-    <div class="d-inline-block">
+    <link rel="stylesheet" href="/css/reg-login.css">
+    <div class="main">
+        <section class="signup">
+            <div class="container">
+                <div class="signup-content mt-5">
+                        <h2 class="form-title">Join BlockDegree</h2>
+                        <div class="form-group">
+                            <form action="/register/student" method="GET">
+                                <input type="submit" class="form-submit" value="Are you a Student?"/>
+                            </form>
+                            <form action="/register/employer" method="GET" class="mt-3">
+                                <input type="submit" class="form-submit" value="Are you an Employer?"/>
+                            </form>
+                            <form action="/register/university" method="GET" class="mt-3">
+                                <input type="submit" class="form-submit" value="Are you a University?"/>
+                            </form>
+                            
+                        </div>
+                    </form>
+                    <p class="loginhere">
+                        Already have an account ? <a href="/login" class="loginhere-link">Login here</a>
+                    </p>
+                </div>
+            </div>
+        </section>
     </div>
-    <h1 class="display-5 d-inline-block">Sign Up</h1>
-</div>
 
-<div class="container mt-5 text-center">
-    <div class="row">
-        <div class="col">
-            <a href="/register/student" class="btn btn-outline-info w-100 p-4 rem1-25">
-                <!-- <i class="fas fa-stamp mr-2"></i></i> -->
-                Are you a Student?</a>
-        </div>
-    </div>
-    <div class="row mt-4">
-        <div class="col">
-            <a href="/register/employer"
-                class="btn btn-outline-info w-100 p-4 rem1-25">
-                <!-- <i class="fas fa-file-alt mr-2"></i> -->
-                Are you an Employer?</a>
-        </div>
-    </div>
-</div>
-
+    <script src="/js/reg-login.js"></script>
+<!-- This templates was made by Colorlib (https://colorlib.com) -->
 <%- include ("../partials/footer") %>

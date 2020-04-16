@@ -2,26 +2,17 @@
 <!-- <h1>Current User: <%=currentUser%></h1>
 <h1>Student: <%=student._id%></h1> -->
 
-<div class="p-4 text-center darkPurple text-white">
-    <div class="d-inline-block">
-        <!-- <img src="/images/graduate-logo.png" alt="graduate logo"
-            style="width: 150px; height:150px; float:center;" class="ml-3 mr-3"> -->
-        <i class="fas fa-user-graduate fa-7x mr-3"></i>
-    </div>
-    <div class="d-inline-block h-100">
-        <h1 class="display-5 d-inline-block vertical-middle"><%=student.name%>'s Dashboard</h1>
-
-    </div>
-</div>
-
 <div class="container mt-4">
-    <!-- <div class="row">
-            <div class="col">
-                <a href="#" class="btn btn-outline-info w-100 p-2"><i
-                        class="fas fa-stamp mr-2"></i></i>Register with a University</a>
-            </div>
-        </div> -->
+    <div class="row">
+        <div class="col">
+            <a href="/student/<%=student._id%>/registerWithUniversity" class="btn btn-outline-info w-100 p-2">
+                Register with a
+                University</a>
+        </div>
+    </div>
     <h1 class="display-5 text-center mt-3">All Degrees</h1>
+</div>
+<div class="container" style="max-width: 1200px;">
     <table class="table table-hover mt-3">
         <thead class="bg-info text-white">
             <tr>
@@ -55,6 +46,5 @@
             <% i++; }) %>
         </tbody>
     </table>
-
 </div>
 <%- include ("./partials/footer") %>
