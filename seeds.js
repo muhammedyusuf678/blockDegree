@@ -180,7 +180,10 @@ async function seedDB() {
                 else {
                     console.log("added student");
                     registerUser("muhammedyusuf678@gmail.com","mufasa",'Student',savedStudent._id);
-                    savedUniversity.registeredStudentsList.push(savedStudent);
+                    savedUniversity.registeredStudentsList.push({
+                        studentReference: savedStudent,
+                        studentUniversityEmail: "b00068047@aus.edu"
+                    });
 
                     savedStudent.universitiesList.push({
                         universityReference: savedUniversity,

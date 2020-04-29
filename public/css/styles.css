@@ -155,4 +155,26 @@ footer {
     overflow: hidden;
 }
 
+.card, .displayNone {
+    display: none;
+}
+
+.spinnerLoc {
+    position: fixed;
+    top: 30%;
+    left: 50%;
+}
+
+.vertical-center {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+}
+.flex-center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 500px;
+    border: 3px solid green;
+}
 

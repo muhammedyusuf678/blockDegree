@@ -7,35 +7,31 @@
                     <form method="POST" id="registerEmployer" class="signup-form" action="/register/employer">
                         <h2 class="form-title">Create Employer Account</h2>
                         <div class="form-group">
-                            <input type="text" class="form-input" name="employerName" id="employerName" placeholder="Your Name"/>
+                            <input type="text" class="form-input" name="employerName" id="employerName" placeholder="Your Name" required/>
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-input" name="companyName" id="companyName" placeholder="Company Name"/>
+                            <input type="text" class="form-input" name="companyName" id="companyName" placeholder="Company Name" required/>
                         </div>
                         <div class="form-group">
-                            <input type="email" class="form-input" name="username" id="username" placeholder="Your Corporate Email"/>
+                            <input type="email" class="form-input" name="username" id="username" placeholder="Your Corporate Email" required/>
                         </div>
                         <div class="form-group">
-                            <input type="password" class="form-input" name="password" id="password" placeholder="Password"/>
-                            <!-- <span toggle="#password" class="zmdi zmdi-eye field-icon toggle-password"></span> -->
-                            <span class="toggle-password">
-                                <i class="fas fa-eye "></i>
-                            </span>  
+                            <input type="password" class="form-input" name="password" id="password" placeholder="Password" required/> 
                         </div>
                         <div class="form-group">
-                            <input type="password" class="form-input" name="confirmPassword" id="confirmPassword" placeholder="Repeat your password"/>
+                            <input type="password" class="form-input" name="confirmPassword" id="confirmPassword" placeholder="Repeat your password" required/>
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-input" name="contactNumber" id="contactNumber" placeholder="Contact Number"/>
+                            <input type="text" class="form-input" name="contactNumber" id="contactNumber" placeholder="Contact Number" required/>
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-input" name="location[poBox]" id="poBox" placeholder="P.O Box"/>
+                            <input type="text" class="form-input" name="location[poBox]" id="poBox" placeholder="P.O Box" required/>
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-input" name="location[city]" id="city" placeholder="City"/>
+                            <input type="text" class="form-input" name="location[city]" id="city" placeholder="City" required/>
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-input" name="location[country]" id="country" placeholder="Country"/>
+                            <input type="text" class="form-input" name="location[country]" id="country" placeholder="Country" required/>
                         </div>
                         <div class="form-group">
                             <input type="submit" name="submit" id="submit" class="form-submit" value="Sign up"/>

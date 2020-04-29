@@ -4,25 +4,27 @@
         <a href="/<%=currentUser.userType.toLowerCase()%>/<%=currentUser.userObject%>" class="btn btn-outline-info"><i class="fas fa-arrow-circle-left mr-2"></i>Return to
             Dashboard</a>
     </div>
-    <h1 class="display-4 text-center mt-3">Add a Degree</h1>
+    <!-- <h1 class="display-4 text-center mt-3">Add a Degree</h1> -->
+    <h1 class="display-heading-4 text-center mt-4">Add a Degree</h1>
+
     <form class="mt-3" action="<%="/university/"+universityId+"/addDegree"%>" method="POST">
         <input type="hidden" name="university" value="<%=universityId%>">
         <div class="form-group">
             <label for="student">Student BlockDegree Email</label>
-            <input type="email" class="form-control" name="student" id="student">
+            <input type="email" class="form-control" name="student" id="student" required>
         </div>
         <div class="form-group">
             <label for="studentUniversityEmail">Student University Email</label>
-            <input type="email" class="form-control" name="studentUniversityEmail" id="studentUniversityEmail">
+            <input type="email" class="form-control" name="studentUniversityEmail" id="studentUniversityEmail" required>
         </div>
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="college">College</label>
-                <input type="text" class="form-control" name="college" id="college">
+                <input type="text" class="form-control" name="college" id="college" required>
             </div>
             <div class="form-group">
                 <label for="major">Select Major</label>
-                <select class="form-control" id="major" name="major">
+                <select class="form-control" id="major" name="major" required>
                     <%majors.forEach(function(major){%>
                         <option value="<%=major%>"><%=major%></option>
                     <%})%>
@@ -32,7 +34,7 @@
         <div class="form-row">
             <div class="form-group">
                 <label for="degreeType">Select Degree Type</label>
-                <select class="form-control" id="degreeType" name="degreeType">
+                <select class="form-control" id="degreeType" name="degreeType" required>
                     <%degreeTypes.forEach(function(degreeType){%>
                         <option value="<%=degreeType%>"><%=degreeType%></option>
                     <%})%>
@@ -40,17 +42,22 @@
             </div>
             <div class="form-group col-md-2">
                 <label for="cgpa">CGPA</label>
-                <input type="text" class="form-control" name="cgpa" id="cgpa">
+                <input type="text" class="form-control" name="cgpa" id="cgpa" required>
             </div>
             <div class="form-group col-md-4">
                 <label for="honors">Honors if any</label>
-                <input type="text" class="form-control" name="honors" id="honors">
+                <select class="form-control" id="honors" name="honors" required>
+                    <option value="-1">None</option>
+                    <option value="Cum Laude">Cum Laude</option>
+                    <option value="Magna Cum Laude">Magna Cum Laude</option>
+                    <option value="Summa Cum Laude">Summa Cum Laude</option>
+                </select>
             </div>
 
         </div>
         <div class="form-group">
             <label for="issueDate">Date Issued</label>
-            <input type="date" class="form-control" name="issueDate" id="issueDate">
+            <input type="date" class="form-control" name="issueDate" id="issueDate" required>
         </div>
         <div class="form-group text-center">
             <button type="submit" class="btn btn-outline-success">Submit Add Degree Transaction</button>

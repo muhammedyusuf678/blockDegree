@@ -50,6 +50,9 @@ app.use(function (req, res, next) {
     res.locals.currentUrl = req.originalUrl;
     next();
 })
+
+const hasher = require('node-object-hash')({ sort: true, coerce: true });
+
 //--------------------
 
 app.get("/", function (req, res) {
@@ -59,7 +62,7 @@ app.get("/", function (req, res) {
     res.render("index");
 })
 
-app.get("/test",function (req,res){
+app.get("/test", function (req, res) {
     res.render("template")
 })
 
@@ -82,6 +85,19 @@ app.get("/register/employer", function (req, res) {
         return res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject);
     }
     res.render("register/employer")
+})
+
+app.get("/register/university", function (req, res) {
+    if (req.isAuthenticated()) {
+        return res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject);
+    }
+    res.render("register/university")
+})
+
+app.post("/register/university", function (req, res) {
+    console.log("post request received in /registerUniversity");
+    req.flash("success", "Thank you for your interest in joining Blockdegree, "+req.body.representativeName+". We will get back to you within 5 working days")
+    res.redirect("/");
 })
 
 app.post("/register/student", function (req, res) {
@@ -143,7 +159,8 @@ app.post("/register/employer", function (req, res) {
         companyName: req.body.companyName,
         location: req.body.location,
         contactNumber: req.body.contactNumber,
-        sharesList: []
+        sharesList: [],
+        blockDegreeEmail: req.body.username
     }
     console.log(newEmployer)
     Employer.create(newEmployer, (err, savedEmployer) => {
@@ -187,6 +204,7 @@ app.post("/register/employer", function (req, res) {
 })
 
 app.get("/login", function (req, res) {
+    console.log("in login")
     if (req.isAuthenticated()) {
         return res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject);
     }
@@ -246,77 +264,83 @@ app.post("/university/:id/addDegree", middleware.isLoggedIn, middleware.checkUse
     }
     var foundStudent = await dbFunctions.findStudentById(foundUser.userObject);
 
-    // console.log("foundStudent in addDegree")
-    // console.log(foundStudent);
-    var foundUniversity = req.university;
-    // console.log("foundUniversity in addDegree")
-    // console.log(foundUniversity);
+    University.findById(universityId)
+        .populate({
+            path: 'registeredStudentsList.studentReference',
+            model: 'Student'
+        })
+        .exec(function (err, foundUniversity) {
+            if(err){
+                console.log(err);
+                req.flash("error", "Database Error: Could not create degree. Please try again later")
+                res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject)
+            }
+            var foundRegistered = false;
+            for (var i = 0; i < foundUniversity.registeredStudentsList.length; i++) {
+                if (foundStudent._id.equals(foundUniversity.registeredStudentsList[i].studentReference.id)) {
+                    foundRegistered = true;
+                }
+            }
+            if (!foundRegistered) {
+                console.log("degrees can only be awarded to students registered with your institution")
+                console.log("The student specified is not registered with you")
+                req.flash("error", "Degrees can only be awarded to students registered with your institution. The student specified is not registered with you")
+                return res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject)
+            }
+            var newDegree = {
+                ...req.body,
+                university: foundUniversity._id,//stored as object references
+                student: foundStudent._id,
+                universityName: foundUniversity.universityName,
+                studentName: foundStudent.name
+            }
+            // console.log("new degree");
+            // console.log(newDegree);
 
-    var foundRegistered = false;
-    for (var i = 0; i < foundUniversity.registeredStudentsList.length; i++) {
-        if (foundStudent._id.equals(foundUniversity.registeredStudentsList[i])) {
-            foundRegistered = true;
-        }
-    }
-    if (!foundRegistered) {
-        console.log("degrees can only be awarded to students registered with your institution")
-        console.log("The student specified is not registered with you")
-        req.flash("error", "Degrees can only be awarded to students registered with your institution. The student specified is not registered with you")
-        return res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject)
-    }
-    var newDegree = {
-        ...req.body,
-        university: foundUniversity._id,//stored as object references
-        student: foundStudent._id,
-        universityName: foundUniversity.universityName,
-        studentName: foundStudent.name
-    }
-    // console.log("new degree");
-    // console.log(newDegree);
-
-    var dummyDegree = {
-        university: mongoose.Types.ObjectId(),
-        student: mongoose.Types.ObjectId(),
-        studentName: 'dummy',
-        universityName: 'dummy',
-        studentUniversityEmail: 'dummy',
-        college: 'dummy',
-        major: 'dummy',
-        degreeType: 'dummy',
-        cgpa: 0,
-        honors: 'dummy',
-        issueDate: req.body.issueDate,
-        universityName: 'dummy'
-    }
-    Degree.create(dummyDegree, async function (err, savedDummyDegree) {
-        if (err) {
-            console.log(err);
-            req.flash("error", "Database Error: Could not create degree. Please try again later")
-            res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject)
-        }
-        else {
-            // console.log("saved dummy degree")
-            // console.log(savedDummyDegree)
-            await Degree.findOneAndUpdate({ _id: savedDummyDegree._id }, { $set: newDegree }, { new: true }, async function (err, savedFinalDegree) {
+            var dummyDegree = {
+                university: mongoose.Types.ObjectId(),
+                student: mongoose.Types.ObjectId(),
+                studentName: 'dummy',
+                universityName: 'dummy',
+                studentUniversityEmail: 'dummy',
+                college: 'dummy',
+                major: 'dummy',
+                degreeType: 'dummy',
+                cgpa: 0,
+                honors: 'dummy',
+                issueDate: req.body.issueDate,
+                universityName: 'dummy'
+            }
+            Degree.create(dummyDegree, async function (err, savedDummyDegree) {
                 if (err) {
                     console.log(err);
                     req.flash("error", "Database Error: Could not create degree. Please try again later")
-                    return res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject)
+                    res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject)
                 }
-                console.log("final degree saved to DB: " + savedFinalDegree);
-                foundStudent.degreesList.push(savedFinalDegree);
-                foundStudent.save(function (err) {
-                    if (err) console.log(err)
-                });
-                foundUniversity.issuedDegrees.push(savedFinalDegree);
-                foundUniversity.save(function (err) {
-                    if (err) console.log(err)
-                });
+                else {
+                    // console.log("saved dummy degree")
+                    // console.log(savedDummyDegree)
+                    await Degree.findOneAndUpdate({ _id: savedDummyDegree._id }, { $set: newDegree }, { new: true }, async function (err, savedFinalDegree) {
+                        if (err) {
+                            console.log(err);
+                            req.flash("error", "Database Error: Could not create degree. Please try again later")
+                            return res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject)
+                        }
+                        console.log("final degree saved to DB: " + savedFinalDegree);
+                        foundStudent.degreesList.push(savedFinalDegree);
+                        foundStudent.save(function (err) {
+                            if (err) console.log(err)
+                        });
+                        foundUniversity.issuedDegrees.push(savedFinalDegree);
+                        foundUniversity.save(function (err) {
+                            if (err) console.log(err)
+                        });
+                    })
+                    req.flash("success", "New Degree Pushed to Blockchain and Awarded Successfully")
+                    res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject)
+                }
             })
-            req.flash("success","New Degree Awarded Successfully")
-            res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject)
-        }
-    })
+        })
 })
 
 
@@ -349,26 +373,50 @@ app.get("/university/:id/viewAllStudents", middleware.isLoggedIn, middleware.che
     //async await
     console.log("get request recieved in viewAllStudents")
     var universityId = req.params.id;
-    University.findById(universityId).populate("registeredStudentsList").exec(function (err, foundUniversity) {
-        if (err) console.log(err);
-        else {
-            res.render("viewAllStudents", { university: foundUniversity })
-        }
-    })
+    University.findById(universityId)
+        .populate({
+            path: 'registeredStudentsList.studentReference',
+            model: 'Student'
+        })
+        .exec(function (err, foundUniversity) {
+            if (err) console.log(err);
+            else {
+                console.log(foundUniversity.registeredStudentsList)
+                res.render("viewAllStudents", { university: foundUniversity })
+            }
+        })
+
+    // .populate({ 
+    //     path: 'pages',
+    //     populate: {
+    //       path: 'components',
+    //       model: 'Component'
+    //     } 
+    //  })
 })
 
 //show degree
 app.get("/degrees/:id", middleware.isLoggedIn, middleware.canViewDegree, async function (req, res) {
     console.log("get request recieved in /degrees/:id")
     var id = req.params.id;
-    Degree.findById(id, async function (err, foundDegree) {
+    Degree.findById(id, function (err, foundDegree) {
         if (err) {
             console.log(err);
+            req.flash('error', 'A database error occurred. Please try again later')
+            return res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject)
         }
         else {
             console.log("foundDegree in show degree route")
-            console.log(foundDegree);
-            res.render("viewDegree", { degree: foundDegree });
+            // console.log(foundDegree);
+            University.findById(foundDegree.university, function (err, foundUniversity) {
+                if (err) {
+                    console.log(err)
+                    req.flash('error', 'A database error occurred. Please try again later')
+                    return res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject)
+                }
+                console.log("foundUniversity in show degree route")
+                res.render("viewDegree", { degree: foundDegree, university: foundUniversity });
+            })
         }
     })
 })
@@ -404,27 +452,64 @@ app.get("/student/:id/registerWithUniversity", middleware.isLoggedIn, middleware
     })
 })
 
-app.post("/student/:id/registerWithUniversity", middleware.isLoggedIn, middleware.checkUserStudentDashboard, function (req, res) {
+app.post("/student/:id/registerWithUniversity", middleware.isLoggedIn, middleware.checkUserDashboard, function (req, res) {
     console.log("post request recieved in registerWithUniversity");
     console.log(req.body);
     var selectedUniversity = req.body.university;
-
     var newRegisteredUniversityForStudent = {
         universityReference: selectedUniversity,
         studentUniversityEmail: req.body.studentUniversityEmail,
-        verified: false
+        verified: true
     }
 
-    req.student.universitiesList.push(newRegisteredUniversityForStudent);
-    req.student.save(function (err) {
-        if (err) console.log(err);
-        else {
-            console.log("updated student with new university entry");
-            req.flash("success","A verification email has been sent to your university email for verification")
-            res.redirect("/student/" + req.student._id + "/registerWithUniversity")
-        }
-    })
+    Student.findById(req.params.id)
+        .populate({
+            path: 'universitiesList.universityReference',
+            model: 'University'
+        }).exec(function (err, foundStudent) {
+            if (err) {
+                console.log(err);
+                return res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject)
+            }
+            for (var i = 0; i < foundStudent.universitiesList.length; i++) {
+                if (foundStudent.universitiesList[i].universityReference._id == selectedUniversity) {
+                    req.flash("error", "You are already registered with this university!")
+                    return res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject)
+                }
+            }
+            foundStudent.universitiesList.push(newRegisteredUniversityForStudent);
 
+            University.findById(selectedUniversity, function (err, foundUniversity) {
+                if (err) {
+                    console.log(err);
+                    req.flash("error", "Database Error. Please try again later")
+                    return res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject)
+                }
+                console.log("foundUniversity in registerWithUniversity")
+                foundUniversity.registeredStudentsList.push({
+                    studentReference: foundStudent,
+                    studentUniversityEmail: req.body.studentUniversityEmail
+                });
+                foundUniversity.save(function (err) {
+                    if (err) {
+                        console.log(err)
+                        req.flash("error", "Database Error. Please try again later")
+                        return res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject)
+                    }
+                    console.log("added new registered student to university");
+                    foundStudent.save(function (err) {
+                        if (err) {
+                            console.log(err)
+                            req.flash("error", "Database Error. Please try again later")
+                            return res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject)
+                        }
+                        console.log("updated student with new university entry");
+                        req.flash("success", "A verification email has been sent to your university email for verification")
+                        res.redirect("/student/" + foundStudent._id + "/registerWithUniversity")
+                    })
+                })
+            })
+        })
 })
 
 app.get("/degrees/:id/share", middleware.isLoggedIn, middleware.canShareRevoke, async function (req, res) {
@@ -433,7 +518,7 @@ app.get("/degrees/:id/share", middleware.isLoggedIn, middleware.canShareRevoke, 
     await Student.findById(foundDegree.student)
         .populate("sharesList.degree")
         .populate("sharesList.sharedWith")
-            // model: "sharesList.userType"
+        // model: "sharesList.userType"
         .exec(function (err, foundStudent) {
             if (err) console.log(err);
             else {
@@ -464,12 +549,12 @@ app.post("/degrees/:id/share", middleware.isLoggedIn, middleware.canShareRevoke,
     var foundUser = await dbFunctions.findUserByBlockDegreeEmail(blockDegreeEmail);
     if (!foundUser) {
         console.log("no such user exists");
-        req.flash("error","No such user exists!")
+        req.flash("error", "No such user exists!")
         return res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject)
     }
     if (foundUser.userType == 'Student') {
         console.log("degrees can only be shared with employer or university accounts")
-        req.flash("error","Degrees can only be shared with employer or university accounts")
+        req.flash("error", "Degrees can only be shared with employer or university accounts")
         return res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject)
     }
 
@@ -498,7 +583,7 @@ app.post("/degrees/:id/share", middleware.isLoggedIn, middleware.canShareRevoke,
         if (err) console.log(err);
         else {
             console.log("saved accountToShareWith")
-            req.flash("success","Degree shared successfully!")
+            req.flash("success", "Degree shared successfully!")
             res.redirect("/degrees/" + degreeID + "/share");
         }
     })
@@ -530,7 +615,7 @@ app.get("/degrees/:id/revoke/:sharedWithId", middleware.isLoggedIn, middleware.c
             else {
                 console.log("found student in /revokeDegree");
                 console.log(foundStudent);
-                
+
                 var sharedWithUserType;
                 foundStudent.sharesList = foundStudent.sharesList.filter(function (share) {
                     if (!((String(share.degree._id) == String(degreeId)) && (String(share.sharedWith._id) == String(sharedWithId)))) {
@@ -541,10 +626,10 @@ app.get("/degrees/:id/revoke/:sharedWithId", middleware.isLoggedIn, middleware.c
                     }
                 })
 
-                if(sharedWithUserType === 'Employer'){
+                if (sharedWithUserType === 'Employer') {
                     foundSharedWith = await dbFunctions.findEmployerById(sharedWithId);
                 }
-                else if (sharedWithUserType === 'University'){
+                else if (sharedWithUserType === 'University') {
                     foundSharedWith = await dbFunctions.findUniversityById(sharedWithId);
                 }
                 foundSharedWith.sharesList = foundSharedWith.sharesList.filter(function (degree) {
@@ -566,7 +651,7 @@ app.get("/degrees/:id/revoke/:sharedWithId", middleware.isLoggedIn, middleware.c
                     else {
                         console.log("saved student")
                         console.log(foundStudent);
-                        req.flash("success","Degree unshared!")
+                        req.flash("success", "Degree unshared!")
                         res.redirect("/degrees/" + degreeId + "/share");
                     }
                 })

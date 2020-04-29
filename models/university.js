@@ -6,31 +6,31 @@ const universitySchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
-    registeredStudentsList:[
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Student',
-            required: true
-        }
-    ],
+    // registeredStudentsList:[
+    //     {
+    //         type: mongoose.Schema.Types.ObjectId,
+    //         ref: 'Student',
+    //         required: true
+    //     }
+    // ],
     blockDegreeEmail: {
         type:String,
         required: true,
         unique: true
     },
-    // registeredStudentsList:[
-    //     {
-    //         studentReference: {
-    //             type: mongoose.Schema.Types.ObjectId,
-    //             ref: 'Student',
-    //             required: true
-    //         },
-    //         studentUniversityEmail:{
-    //             type: String,
-    //             required: true
-    //         }
-    //     }
-    // ],
+    registeredStudentsList:[
+        {
+            studentReference: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Student',
+                required: true
+            },
+            studentUniversityEmail:{
+                type: String,
+                required: true
+            }
+        }
+    ],
     issuedDegrees:[
         {
             type: mongoose.Schema.Types.ObjectId,

@@ -1,8 +1,39 @@
 <%- include ("./partials/header") %>
 
-<div class="container mt-3">
+<!-- <div class="flex-center">
+        <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+    <div class="flex-center">
+        <p class="message-1">Computing Degree Hash....</p>
+        <p class="message-2 displayNone">jroiwjfoijsdfopj203412930</p>
+        <p class="message-3 displayNone">Retrieving Degree Hash from Blockchain...</p>
+        <p class="message-4 displayNone">jroiwjfoijsdfopj203412930</p>
+        <p class="message-5 displayNone"><i class="far fa-check-circle mr-2"></i>Hashes are equal - Degree is Blockchain
+            Verified </p>
+    </div> -->
+
+<div class="container mt-5">
+    <div class="d-flex flex-column align-items-center justify-content-center">
+        <div class="row mb-3">
+            <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <div class="row">
+            <p id="message-1">Computing Degree Hash....</p>
+            <p id="message-3" class="displayNone">Retrieving Degree Hash from Blockchain...</p>
+            <p id="message-5" class=" displayNone"><i class="far fa-check-circle mr-2"></i>Hashes are equal - Degree is
+                Blockchain Verified </p>
+        </div>
+        <div class="row">
+            <p id="message-2" class=" displayNone">jroiwjfoijsdfopj203412930</p>
+            <p id="message-4" class=" displayNone">jroiwjfoijsdfopj203412930</p>
+        </div>
+    </div>
+
     <div class="card">
-        <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
         <div class="card-body text-center degreeCard">
             <p class="card-text">On the authority of the</p>
             <h5 class="card-title diplomaFont rem4"><%= degree.universityName%></h5>
@@ -11,21 +42,21 @@
             <p class="card-text">is awarded the</p>
 
             <h1 class="majorFont"><%=degree.degreeType%> in <%=degree.major%></h1>
-            <p class="card-text ">with distinction</p>
-            <h5 class="card-title"><%=degree.honors%></h5>
+            <%if (degree.honors != "-1"){%>
+                <p class="card-text ">with distinction</p>
+                <h5 class="card-title"><%=degree.honors%></h5>
+            <%}%>
             <p class="card-text">and all honors, rights and priviledges attached to the same</p>
-            <!-- <div class="text-center"> -->
-
-            <div class="text-center">
+            <!-- <div class="text-center">
                 <img src="/images/aus-logo.png" alt="university logo" style="width: 150px; height:150px; float:center;"
                     class="ml-3 mr-3">
-            </div>
+            </div> -->
             <div class="row">
                 <div class="col">
-                    <p class="signFont">Kevin Mitchell</p>
+                    <p class="signFont"><%=university.chancellor%></p>
                 </div>
                 <div class="col">
-                    <p class="signFont">Gerassimos Barlas</p>
+                    <p class="signFont"><%=university.dean%></p>
                 </div>
             </div>
             <div class="row">
@@ -45,9 +76,69 @@
                     <%=degree.issueDate.toLocaleDateString("en-US") %></small></p>
         </div>
     </div>
-    <div class="text-center m-0 p-0">
+    <div class="text-center m-0 p-0 blockchainVerifiedImg displayNone">
         <img src="/images/blockchain-verified.png" alt="blockchain verified" class="w-75, h-75">
     </div>
-
 </div>
+<script src="/js/jquery-3.4.1.min.js"></script>
+<script>
+    // $(" .message-1, .message-2").delay(500).show(300)
+    var animationTime = 300;
+    // $(".message-2").delay(1000).fadeIn(animationTime).delay(1000).queue(function () {
+    //     $(".message-2").fadeOut(animationTime);
+    //     $(".message-1").fadeOut(animationTime)
+    //     $(".message-3").delay(1000).fadeIn(animationTime).delay(1000).queue(function () {
+    //         $(".message-4").delay(1000).fadeIn(animationTime).queue(function(){
+    //             $(".message-3").hide();
+    //             $(".message-4").delay(1000).hide(animationTime);
+    //             $(".message-5").delay(1000).fadeIn(animationTime).queue(function(){
+    //                 $(".message-5").fadeOut(animationTime);
+    //             })
+    //         })
+    //     })
+    // })
+
+    $("#message-2").delay(500).fadeIn(animationTime).delay(1000).fadeOut(animationTime).queue(function () {
+        $("#message-1").fadeOut(animationTime).queue(function () {
+            $("#message-3").delay(500).fadeIn(animationTime).queue(function () {
+                $("#message-4").delay(500).fadeIn(animationTime).delay(1000).fadeOut(animationTime).queue(function () {
+                    $("#message-3").hide()
+                    console.log("helllooo")
+                    $("#message-5").delay(500).fadeIn(animationTime).delay(1000).fadeOut(animationTime).queue(function () {
+                        $(".spinner-border").fadeOut(animationTime);
+                        $(".card").delay(500).fadeIn(animationTime);
+                        $(".blockchainVerifiedImg").delay(500).fadeIn(animationTime);
+
+                    })
+
+                })
+            })
+        })
+    })
+
+    // $(".message-3").delay(3000).fadeIn(animationTime)
+    // $(".message-4").delay(5000).fadeIn(animationTime)
+    // $(".message-4").delay(6000).fadeOut(animationTime)
+    // $(".message-3").delay(7000).fadeOut(animationTime)
+
+    // $(".message-5").delay(7500).fadeIn(animationTime)
+    // $(".message-5").delay(8500).fadeOut(animationTime)
+
+    // $(".spinner-border").delay(9000).fadeOut(animationTime)
+    // $(".card").delay(9500).fadeIn(animationTime);
+    // $(".blockchainVerifiedImg").delay(10000).fadeIn(animationTime);
+
+
+
+
+
+    // $(".message-3, .message-4").delay(1600).fadeIn(300)
+    // $(".message-3, .message-4").delay(4000).fadeOut(300)
+    // $(".message-5").delay(4100).fadeIn(300)
+    // $(".message-5").delay(5100).fadeOut(300)
+    // $(".spinner-border").delay(5200).fadeOut(300)
+    // $(".card").delay(5300).fadeIn();
+    // $(".blockchainVerifiedImg").delay(5500).fadeIn();
+
+</script>
 <%- include ("./partials/footer") %>

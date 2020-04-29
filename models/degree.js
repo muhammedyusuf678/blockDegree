@@ -58,19 +58,5 @@ var Degree = new mongoose.model("Degree", degreeSchema);
 
 module.exports = Degree;
 
-// universityName: {
-    //     type: String,
-    //     required: true
-    // },
-    // studentBlockDegreeEmail: {
-    //     type: String,
-    //     required: true
-    // },
-    // studentName: {
-    //     type: String,
-    //     required: true
-    // },
-    // studentUniversityEmail: {
-    //     type: String,
-    //     required: true
-    // },
+//dean and chancellor should be here
+//no need for college

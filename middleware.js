@@ -27,6 +27,8 @@ module.exports = {
                 next();
             }
             else {
+                req.flash("error","That was someone else's dashboard")
+
                 console.log("this is someone elses dashboard");
                 res.redirect("/"+req.user.userType.toLowerCase()+"/"+req.user.userObject)
             }
@@ -44,6 +46,8 @@ module.exports = {
                 next();
             }
             else {
+                req.flash("error","That was someone else's dashboard")
+
                 console.log("this is someone elses dashboard");
                 res.redirect("/"+req.user.userType.toLowerCase()+"/"+req.user.userObject)
             }
@@ -61,6 +65,8 @@ module.exports = {
                 next();
             }
             else {
+                req.flash("error","That was someone else's dashboard")
+
                 console.log("this is someone elses dashboard");
                 res.redirect("/"+req.user.userType.toLowerCase()+"/"+req.user.userObject)
             }
@@ -72,6 +78,7 @@ module.exports = {
             next();
         }
         else {
+            req.flash("error","That was someone else's dashboard")
             console.log("this is someone elses dashboard");
             res.redirect("/"+req.user.userType.toLowerCase()+"/"+req.user.userObject)
         }
@@ -90,7 +97,8 @@ module.exports = {
                         next();
                     }
                     else {
-                        console.log("this is someone elses degree");
+                        req.flash("error","That was someone else's degree" )
+                        console.log("This is someone elses degree");
                         res.redirect("/"+req.user.userType.toLowerCase()+"/"+req.user.userObject)
                     }
                     break;
@@ -109,6 +117,7 @@ module.exports = {
                                 return next();
                             }
                         }
+                        req.flash("error","This degree was not awarded by your institution or has not been shared with you by the student")
                         console.log("this degree was not awarded by your institution or has not been shared with you by the student")
                         return res.redirect("/"+req.user.userType.toLowerCase()+"/"+req.user.userObject) 
                     })
@@ -126,7 +135,8 @@ module.exports = {
                                 return next();
                             }
                         }
-                        console.log("this degree has not been shared with you by the student")
+                        req.flash("error","This degree has not been shared with you by the student")
+                        console.log("This degree has not been shared with you by the student")
                         return res.redirect("/"+req.user.userType.toLowerCase()+"/"+req.user.userObject) 
                     })
             }
@@ -134,11 +144,13 @@ module.exports = {
     },
     canShareRevoke: function(req,res,next){
         if(!(req.user.userType === 'Student')){
+            req.flash("error","This functionality is only available for the student")
             console.log("this functionality is only available for the student")
             return res.redirect("/"+req.user.userType.toLowerCase()+"/"+req.user.userObject) 
         }
         Degree.findById(req.params.id, async function (err, foundDegree) {
             if (err || !foundDegree) {
+                req.flash("error","Degree is undefined or does not exist")
                 console.log("foundDegree is undefined or does not exist");
                 return res.redirect("/"+req.user.userType.toLowerCase()+"/"+req.user.userObject)
             }
@@ -147,6 +159,7 @@ module.exports = {
                 next();
             }
             else {
+                req.flash("error","That was someone else's degree")
                 console.log("this is someone elses degree")
                 return res.redirect("/"+req.user.userType.toLowerCase()+"/"+req.user.userObject)
             }

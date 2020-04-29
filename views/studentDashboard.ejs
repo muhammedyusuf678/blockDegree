@@ -3,17 +3,18 @@
 <h1>Student: <%=student._id%></h1> -->
 
 <div class="container mt-4">
-    <div class="row">
-        <div class="col">
-            <a href="/student/<%=student._id%>/registerWithUniversity" class="btn btn-outline-info w-100 p-2">
+    <!-- <div class="row"> -->
+    <div class="w-100 text-center">
+        <!-- <div class="col md-4"> -->
+            <a href="/student/<%=student._id%>/registerWithUniversity" class="btn btn-outline-info p-2">
                 Register with a
                 University</a>
-        </div>
+        <!-- </div> -->
     </div>
     <h1 class="display-5 text-center mt-3">All Degrees</h1>
 </div>
 <div class="container" style="max-width: 1200px;">
-    <table class="table table-hover mt-3">
+    <table class="table table-hover mt-3" id="myDataTable">
         <thead class="bg-info text-white">
             <tr>
                 <th scope="col">#</th>

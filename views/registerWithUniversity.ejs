@@ -8,7 +8,7 @@
     <form class="mt-4" action="/student/<%=student._id%>/registerWithUniversity" method="POST" style="font-size:1.25rem;">
         <div class="form-group col-md-4 marginAuto">
             <label for="university">Select University: </label><br>
-            <select name="university" class="custom-select">
+            <select name="university" class="custom-select" required>
                 <% allUniversities.forEach(function(university){ %>
                 <option value="<%=university._id%>"><%=university.universityName%></option>
                 <%})%>
@@ -17,10 +17,11 @@
         <div class="form-group col-md-4">
             <label for="studentUniversityEmail">Student University Email: </label>
             <input type="email" class="form-control" name="studentUniversityEmail" id="studentUniversityEmail"
-                placeholder="b000XXXXX@uni.edu"/>
+                placeholder="b000XXXXX@uni.edu" required/>
         </div>
         <div class="form-group col-md-4 mt-2">
-            <p class="text-muted" style="font-size: 1rem;">A verification email will be sent to the following university email. The domain must match that of the selected university</p>
+            <p class="text-muted" style="font-size: 1rem;">A verification email will be sent to the following university email.</p>
+            <!-- <p>The domain must match that of the selected university</p> -->
         </div>
         <div class="form-group text-center mt-4">
             <button type="submit" class="btn btn-outline-success">Submit</button>
@@ -30,13 +31,13 @@
     <hr style="border-top:5px solid rgba(0,0,0,.1)" class="mt-4">
 
     <h1 class="mt-4 display-heading-4 text-center">Registered Universities</h1>
-    <table class="table table-hover mt-4">
+    <table class="table table-hover mt-4" id="myDataTable">
         <thead class="bg-info text-white">
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">University Name</th>
                 <th scope="col">University Email</th>
-                <th scope="col">Verified</th>
+                <!-- <th scope="col">Verified</th> -->
             </tr>
         </thead>
         <tbody>
@@ -46,8 +47,9 @@
                     <th scope="row"><%= i %> </th>
                     <td><%=item.universityReference.universityName%></td>
                     <td><%=item.studentUniversityEmail%></td>
-                    <td><%=item.verified%></td>
+                    <!-- <td><%=item.verified%></td> -->
                 </tr>
+                <%i++;%>
                 <%})%>
         </tbody>
     </table>

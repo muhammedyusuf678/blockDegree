@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="/css/bootstrap-4.4.1.min.css">
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/font-awesome/css/all.css">
-
+    <link rel="stylesheet" type="text/css" href="/datatables/datatables.min.css"/>
+ 
 </head>
 
 <body>
@@ -22,15 +23,15 @@
             <ul class="navbar-nav mr-auto">
                 <%if(currentUser){%>
                 <li class="nav-item active">
-                    <a class="nav-link" href="#">Dashboard <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="/<%=currentUser.userType.toLowerCase()%>/<%=currentUser.userObject%>">Dashboard <span class="sr-only">(current)</span></a>
                 </li>
                 <%}%>
                 <li class="nav-item">
                     <a class="nav-link" href="#">About</a>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link" href="#">Help</a>
-                </li>
+                </li> -->
             </ul>
             <ul class="navbar-nav ml-auto">
                 <% if(!currentUser){ %>
@@ -51,7 +52,7 @@
             </ul>
         </div>
     </nav>
-    <%if(currentUser && !(currentUrl.includes("register") || currentUrl.includes("view") ) ){%>
+    <%if(currentUser && !(currentUrl.includes("register") || currentUrl.includes("view") || currentUrl.includes("degree") ) ){%>
         <%#do stuff if var is defined and not null%>
         <%if(currentUser.userType === 'University' && typeof university !== 'undefined' && university){%>
                 <div class="p-4 text-center" style="background-color: gainsboro;">

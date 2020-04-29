@@ -1,0 +1,46 @@
+<%- include ("../partials/header") %>
+    <link rel="stylesheet" href="/css/reg-login.css">
+    <div class="main">
+        <section class="signup">
+            <div class="container">
+                <div class="signup-content mt-5">
+                        <h2 class="form-title">Join BlockDegree</h2>
+                            <h4 class="text-center">Contact us on 800 63333333</h4>
+                            <h5 class="text-center">OR</h5>
+                            <h4 class="text-center">Fill out the following form and we'll get in touch</h4>
+                            <form action="/register/university" method="POST">
+                                <div class="form-group">
+                                    <input type="text" class="form-input" placeholder="University Name" required>
+
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-input" placeholder="University Website" required>
+
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-input" name="representativeName" placeholder="Representative Name" required>
+
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-input" placeholder="Representative Position" required>
+
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-input" placeholder="Contact Number" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="submit" class="form-submit" value="Submit">
+                                </div>
+                            </form>
+                            <p class="text-center">To join the consortium of universities in the blockchain network, we need to first verify your institutions authenticity</p>
+                    <p class="loginhere">
+                        Already have an account ? <a href="/login" class="loginhere-link">Login here</a>
+                    </p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="/js/reg-login.js"></script>
+<!-- This templates was made by Colorlib (https://colorlib.com) -->
+<%- include ("../partials/footer") %>
