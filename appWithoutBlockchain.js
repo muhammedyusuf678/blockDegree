@@ -212,7 +212,8 @@ app.get("/login", function (req, res) {
 })
 
 app.post("/login", passport.authenticate("local", {
-    failureRedirect: "/login"
+    failureRedirect: "/login",
+    failureFlash: true
 }), function (req, res) {
     switch (req.user.userType) {
         case 'Student':
@@ -336,6 +337,7 @@ app.post("/university/:id/addDegree", middleware.isLoggedIn, middleware.checkUse
                             if (err) console.log(err)
                         });
                     })
+                    //saeed: send whatever you want to show user in the flash message
                     req.flash("success", "New Degree Pushed to Blockchain and Awarded Successfully")
                     res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject)
                 }
@@ -414,8 +416,10 @@ app.get("/degrees/:id", middleware.isLoggedIn, middleware.canViewDegree, async f
                     req.flash('error', 'A database error occurred. Please try again later')
                     return res.redirect("/" + req.user.userType.toLowerCase() + "/" + req.user.userObject)
                 }
-                console.log("foundUniversity in show degree route")
-                res.render("viewDegree", { degree: foundDegree, university: foundUniversity });
+                // console.log("foundUniversity in show degree route")
+                const hashString = hasher.hash(JSON.parse(JSON.stringify(foundDegree)))
+                console.log("server hashing result: " + String(hashString))
+                res.render("viewDegree", { degree: foundDegree, university: foundUniversity, serverHash: String(hashString) });
             })
         }
     })
